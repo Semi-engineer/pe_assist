@@ -1,0 +1,119 @@
+:root {
+    --primary-color: #4A90E2; /* Indigo-like */
+    --accent-color: #50E3C2; /* Green */
+    --text-color: #333;
+    --bg-color: #f9f9f9;
+    --card-bg: #fff;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navbar */
+.navbar {
+    background: var(--card-bg);
+    padding: 1rem 0;
+    box-shadow: var(--box-shadow);
+}
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar .logo {
+    margin: 0;
+    color: var(--primary-color);
+}
+.navbar nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+/* Hero Section */
+.hero-section {
+    background: var(--primary-color);
+    color: #fff;
+    text-align: center;
+    padding: 6rem 0;
+}
+.hero-section h2 { font-size: 3rem; margin-bottom: 1rem; }
+.hero-section p { font-size: 1.2rem; }
+.cta-button {
+    display: inline-block;
+    background: var(--accent-color);
+    color: var(--text-color);
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 2rem;
+    transition: transform 0.3s;
+}
+.cta-button:hover {
+    transform: translateY(-3px);
+}
+
+/* Info Section */
+.info-section {
+    padding: 4rem 0;
+    text-align: center;
+}
+.info-section .container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.info-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Tools Section */
+.tools-section {
+    padding: 4rem 0;
+    background: #f1f1f1;
+}
+.tools-section h2 { text-align: center; margin-bottom: 2rem; }
+.tool-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+.tool-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    background: var(--text-color);
+    color: #fff;
+}
