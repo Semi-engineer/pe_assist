@@ -7,9 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Project Form Elements
     const projectForm = document.getElementById('project-form');
-    const projectTableBody = document.querySelector('#project-table tbody');
-    const progressInput = document.getElementById('progress');
-    const progressValueSpan = document.getElementById('progress-value');
+    const projectChartCanvas = document.getElementById('project-chart');
+    const projectCtx = projectChartCanvas.getContext('2d');
     let projects = [];
 
     // Order Form Elements
@@ -20,9 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let orders = [];
 
     // Save/Load Elements
-    const saveBtn = document.getElementById('save-btn');
+    const saveDataBtn = document.getElementById('save-data-btn');
     const loadBtn = document.getElementById('load-btn');
     const loadFile = document.getElementById('load-file');
+    const savePdfBtn = document.getElementById('save-pdf-btn');
 
     // --- Tab Switching Logic ---
     function switchTab(tab) {
@@ -31,63 +31,101 @@ document.addEventListener('DOMContentLoaded', () => {
             orderTab.classList.remove('active');
             projectSection.classList.add('active');
             orderSection.classList.remove('active');
+            drawProjectGanttChart();
         } else {
             projectTab.classList.remove('active');
             orderTab.classList.add('active');
             projectSection.classList.remove('active');
             orderSection.classList.add('active');
+            renderOrderTable();
         }
     }
 
     projectTab.addEventListener('click', () => switchTab('project'));
     orderTab.addEventListener('click', () => switchTab('order'));
 
-    // --- Project Schedule Logic ---
-    progressInput.addEventListener('input', () => {
-        progressValueSpan.textContent = `${progressInput.value}%`;
-    });
+    // --- Project Schedule Logic (Gantt Chart) ---
+    function drawProjectGanttChart() {
+        projectCtx.clearRect(0, 0, projectChartCanvas.width, projectChartCanvas.height);
+        
+        const barHeight = 25;
+        const barPadding = 15;
+        const totalHeight = (barHeight + barPadding) * projects.length + 50;
+        projectChartCanvas.height = totalHeight;
+        projectChartCanvas.width = 900;
 
-    function renderProjectTable() {
-        projectTableBody.innerHTML = '';
+        // Calculate time scale
+        const allDates = projects.flatMap(p => [new Date(p.startDate), new Date(p.endDate)]);
+        if (allDates.length === 0) return;
+
+        const minDate = new Date(Math.min(...allDates));
+        const maxDate = new Date(Math.max(...allDates));
+        const totalDays = (maxDate - minDate) / (1000 * 60 * 60 * 24);
+        const scaleFactor = (projectChartCanvas.width - 150) / totalDays;
+        
+        // Draw timeline
+        projectCtx.fillStyle = '#666';
+        projectCtx.font = '12px Arial';
+        const dayInterval = Math.ceil(totalDays / 10);
+        for(let i = 0; i <= totalDays; i += dayInterval) {
+            const date = new Date(minDate);
+            date.setDate(minDate.getDate() + i);
+            const x = 100 + i * scaleFactor;
+            projectCtx.fillText(date.toLocaleDateString('th-TH', { month: 'short', day: 'numeric' }), x, 20);
+            projectCtx.strokeStyle = '#e0e0e0';
+            projectCtx.beginPath();
+            projectCtx.moveTo(x, 30);
+            projectCtx.lineTo(x, totalHeight);
+            projectCtx.stroke();
+        }
+
+        // Draw tasks
         projects.forEach((project, index) => {
-            const row = document.createElement('tr');
-            const statusClass = project.status.toLowerCase().replace(' ', '-');
-            row.innerHTML = `
-                <td>${project.projectName}</td>
-                <td>${project.startDate}</td>
-                <td>${project.endDate}</td>
-                <td><span class="status-badge ${statusClass}">${project.status}</span></td>
-                <td>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: ${project.progress}%"></div>
-                    </div>
-                    ${project.progress}%
-                </td>
-                <td><button onclick="deleteProject(${index})">ลบ</button></td>
-            `;
-            projectTableBody.appendChild(row);
+            const startDate = new Date(project.startDate);
+            const endDate = new Date(project.endDate);
+            const startDay = (startDate - minDate) / (1000 * 60 * 60 * 24);
+            const durationDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
+            const x = 100 + startDay * scaleFactor;
+            const y = 30 + index * (barHeight + barPadding);
+            const width = durationDays * scaleFactor;
+
+            // Bar color based on status
+            let barColor = '';
+            if (project.status === 'To Do') barColor = '#f1c40f';
+            else if (project.status === 'In Progress') barColor = '#3498db';
+            else if (project.status === 'Completed') barColor = '#2ecc71';
+
+            projectCtx.fillStyle = barColor;
+            projectCtx.fillRect(x, y, width, barHeight);
+
+            projectCtx.fillStyle = '#333';
+            projectCtx.font = '14px Arial';
+            projectCtx.fillText(project.taskName, 5, y + barHeight / 2 + 5);
+
+            // Add delete button
+            const deleteBtnX = projectChartCanvas.width - 40;
+            const deleteBtnY = y + barHeight / 2;
+            projectCtx.fillStyle = '#e74c3c';
+            projectCtx.fillRect(deleteBtnX - 15, deleteBtnY - 10, 30, 20);
+            projectCtx.fillStyle = '#fff';
+            projectCtx.fillText('X', deleteBtnX - 5, deleteBtnY + 5);
         });
     }
 
     projectForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newProject = {
-            projectName: document.getElementById('projectName').value,
+            taskName: document.getElementById('taskName').value,
             startDate: document.getElementById('startDate').value,
-            endDate: document.getElementById('endDate').value,
+            duration: parseInt(document.getElementById('duration').value),
             status: document.getElementById('status').value,
-            progress: parseInt(document.getElementById('progress').value)
+            endDate: new Date(new Date(document.getElementById('startDate').value).getTime() + parseInt(document.getElementById('duration').value) * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
         };
         projects.push(newProject);
-        renderProjectTable();
+        drawProjectGanttChart();
         projectForm.reset();
-        progressValueSpan.textContent = `0%`;
     });
-
-    window.deleteProject = function(index) {
-        projects.splice(index, 1);
-        renderProjectTable();
-    };
 
     // --- Order Schedule Logic ---
     function renderOrderTable() {
@@ -110,9 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const barHeight = 20;
         const barPadding = 10;
-        const totalHeight = (barHeight + barPadding) * orders.length;
-        const chartHeight = Math.max(totalHeight, chartCanvas.height);
-        chartCanvas.height = chartHeight;
+        const totalHeight = (barHeight + barPadding) * orders.length + 50;
+        chartCanvas.height = totalHeight;
 
         let currentX = 50;
         const totalProcessingTime = orders.reduce((sum, order) => sum + order.processingTime, 0);
@@ -157,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Save/Load Logic (Common for both) ---
-    saveBtn.addEventListener('click', () => {
+    saveDataBtn.addEventListener('click', () => {
         const activeTab = projectSection.classList.contains('active') ? 'project' : 'order';
         const dataToSave = activeTab === 'project' ? projects : orders;
         const fileName = activeTab === 'project' ? 'project_schedule.json' : 'order_schedule.json';
@@ -189,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const activeTab = projectSection.classList.contains('active') ? 'project' : 'order';
                 if (activeTab === 'project') {
                     projects = loadedData;
-                    renderProjectTable();
+                    drawProjectGanttChart();
                 } else {
                     orders = loadedData;
                     renderOrderTable();
@@ -200,6 +237,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         reader.readAsText(file);
+    });
+
+    // --- Save as PDF Logic ---
+    savePdfBtn.addEventListener('click', () => {
+        const activeTab = projectSection.classList.contains('active') ? 'project' : 'order';
+        let elementToCapture;
+        let fileName;
+
+        if (activeTab === 'project') {
+            elementToCapture = document.getElementById('project-chart');
+            fileName = 'project_schedule.pdf';
+        } else {
+            elementToCapture = document.getElementById('orders-table');
+            fileName = 'order_schedule.pdf';
+        }
+        
+        html2canvas(elementToCapture).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210; 
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            pdf.save(fileName);
+        });
     });
 
     // Initial render

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workload Calculator - Production Engineer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50">
+
+  <header class="navbar bg-white shadow">
+    <div class="container mx-auto p-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold">Workload Calculator</h1>
+      <nav>
+        <a href="index.html" class="text-sky-600">กลับหน้าแรก</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-4">
+    <div id="workload-app"></div>
+  </main>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    function WorkloadCalculator() {
+      const [standardTime, setStandardTime] = React.useState(120); // วินาที/ชิ้น
+      const [batchQuantity, setBatchQuantity] = React.useState(50); 
+      const [actualTime, setActualTime] = React.useState(6000); // วินาที
+
+      // คำนวณ Output per Hour
+      const outputPerHour = React.useMemo(() => {
+        if (standardTime <= 0) return 0;
+        return 3600 / standardTime; // ชิ้นต่อชั่วโมง
+      }, [standardTime]);
+
+      // คำนวณเวลารวมสำหรับ batch
+      const totalBatchTime = React.useMemo(() => {
+        return standardTime * batchQuantity; // วินาที
+      }, [standardTime, batchQuantity]);
+
+      // คำนวณ Efficiency %
+      const efficiency = React.useMemo(() => {
+        if (actualTime <= 0) return 0;
+        return (totalBatchTime / actualTime) * 100; // %
+      }, [totalBatchTime, actualTime]);
+
+      const clampInputs = () => {
+        if (standardTime <= 0) setStandardTime(1);
+        if (batchQuantity < 1) setBatchQuantity(1);
+        if (actualTime <= 0) setActualTime(1);
+      };
+
+      return (
+        <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
+          <h1 className="text-2xl font-semibold mb-4">Workload / Output per Hour</h1>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium">Standard Time (วินาที/ชิ้น)</label>
+              <input type="number" value={standardTime} onChange={(e)=>setStandardTime(parseFloat(e.target.value||0))} onBlur={clampInputs}
+                className="w-full p-2 border rounded" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Batch Quantity (ชิ้น)</label>
+              <input type="number" value={batchQuantity} onChange={(e)=>setBatchQuantity(parseInt(e.target.value||0))} onBlur={clampInputs}
+                className="w-full p-2 border rounded" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Actual Time Taken (วินาที)</label>
+              <input type="number" value={actualTime} onChange={(e)=>setActualTime(parseFloat(e.target.value||0))} onBlur={clampInputs}
+                className="w-full p-2 border rounded" />
+            </div>
+
+            <div className="flex gap-2">
+              <button onClick={clampInputs} className="px-4 py-2 bg-emerald-600 text-white rounded">คำนวณ</button>
+              <button onClick={()=>{ setStandardTime(120); setBatchQuantity(50); setActualTime(6000); }} className="px-4 py-2 bg-slate-200 rounded">รีเซ็ต</button>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-3">
+            <div className="p-3 bg-slate-50 rounded shadow-sm">
+              <div className="text-xs text-slate-500">Output per Hour</div>
+              <div className="text-lg font-semibold">{outputPerHour.toFixed(2)} ชิ้น/ชั่วโมง</div>
+            </div>
+            <div className="p-3 bg-slate-50 rounded shadow-sm">
+              <div className="text-xs text-slate-500">Total Batch Time</div>
+              <div className="text-lg font-semibold">{totalBatchTime} วินาที</div>
+            </div>
+            <div className="p-3 bg-slate-50 rounded shadow-sm">
+              <div className="text-xs text-slate-500">Efficiency</div>
+              <div className="text-lg font-semibold">{efficiency.toFixed(2)} %</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("workload-app"));
+    root.render(<WorkloadCalculator />);
+  </script>
+</body>
+</html>

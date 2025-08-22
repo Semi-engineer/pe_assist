@@ -1,67 +1,91 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Production Planning Hub</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Production Planning Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800">
 
-    <header class="navbar">
-        <div class="container">
-            <h1 class="logo">Production Planning Hub</h1>
-            <nav>
-                <a href="#about">เกี่ยวกับ</a>
-                <a href="#tools">เครื่องมือ</a>
-            </nav>
+  <header class="bg-white shadow">
+    <div class="container mx-auto p-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Production Planning Hub</h1>
+      <nav>
+        <a href="#" class="text-sky-600">หน้าหลัก</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6 space-y-10">
+
+    <!-- Hero Section -->
+    <section class="bg-white rounded-2xl shadow-lg p-6 text-center space-y-4">
+      <h2 class="text-3xl font-bold">เกี่ยวกับเครื่องมือ</h2>
+      <p class="text-slate-600">ยกระดับการวางแผนการผลิตของคุณ<br>
+      เครื่องมือและแหล่งข้อมูลสำหรับนักวางแผนการผลิตมืออาชีพ</p>
+      <a href="#tools" class="inline-block px-6 py-3 bg-sky-600 text-white rounded-full font-semibold hover:bg-sky-700 transition">เริ่มวางแผนเลย</a>
+    </section>
+
+    <!-- Tips Section -->
+    <section class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl shadow-lg p-6 space-y-2 text-center">
+        <h3 class="text-xl font-semibold">💡 เคล็ดลับการวางแผน</h3>
+        <p class="text-slate-500">เรียนรู้ Best Practices ในการจัดตารางเวลาและลดต้นทุนการผลิต</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 space-y-2 text-center">
+        <h3 class="text-xl font-semibold">📊 การวิเคราะห์ข้อมูล</h3>
+        <p class="text-slate-500">ใช้ข้อมูลเชิงลึกเพื่อปรับปรุงประสิทธิภาพการผลิตอย่างต่อเนื่อง</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 space-y-2 text-center">
+        <h3 class="text-xl font-semibold">🔗 การบูรณาการ</h3>
+        <p class="text-slate-500">สร้างระบบการทำงานที่เชื่อมโยงทุกส่วนเข้าด้วยกัน</p>
+      </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="space-y-6">
+      <h2 class="text-2xl font-bold text-center mb-4">เครื่องมือหลัก</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
+          <h3 class="text-xl font-semibold">Planner & Scheduler</h3>
+          <p>วางแผนและจัดตารางงานผลิตได้อย่างง่ายดายด้วย Gantt Chart แบบ Interactive</p>
+          <a href="planner.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
         </div>
-    </header>
 
-    <main>
-        <section class="hero-section">
-            <div class="container">
-                <h2>ยกระดับการวางแผนการผลิตของคุณ</h2>
-                <p>เครื่องมือและแหล่งข้อมูลสำหรับนักวางแผนการผลิตมืออาชีพ</p>
-                <a href="planner.html" class="cta-button">เริ่มวางแผนเลย</a>
-            </div>
-        </section>
-
-        <section id="about" class="info-section">
-            <div class="container">
-                <div class="info-card">
-                    <h3>💡 เคล็ดลับการวางแผน</h3>
-                    <p>เรียนรู้ Best Practices ในการจัดตารางเวลาและลดต้นทุนการผลิต</p>
-                </div>
-                <div class="info-card">
-                    <h3>📊 การวิเคราะห์ข้อมูล</h3>
-                    <p>ใช้ข้อมูลเชิงลึกเพื่อปรับปรุงประสิทธิภาพการผลิตอย่างต่อเนื่อง</p>
-                </div>
-                <div class="info-card">
-                    <h3>🔗 การบูรณาการ</h3>
-                    <p>สร้างระบบการทำงานที่เชื่อมโยงทุกส่วนเข้าด้วยกัน</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="tools" class="tools-section">
-            <div class="container">
-                <h2>เครื่องมือหลัก</h2>
-                <div class="tool-card">
-                    <h3>Planner & Scheduler</h3>
-                    <p>วางแผนและจัดตารางงานผลิตได้อย่างง่ายดายด้วย Gantt Chart แบบ Interactive</p>
-                    <a href="planner.html" class="tool-link">เข้าใช้งาน →</a> </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Production Planning Hub. All rights reserved.</p>
+        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
+          <h3 class="text-xl font-semibold">Oil Tank Checker</h3>
+          <p>คำนวณปริมาตรน้ำมันในถังทรงกระบอก</p>
+          <a href="oil-tank.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
         </div>
-    </footer>
 
-    <script src="js/planner.js"></script>
+        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
+          <h3 class="text-xl font-semibold">Standard Time Calculator</h3>
+          <p>Standard Time / Time Study</p>
+          <a href="standard-time.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
+          <h3 class="text-xl font-semibold">Workload Calculator</h3>
+          <p>Workload / Output per Hour</p>
+          <a href="workload.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
+          <h3 class="text-xl font-semibold">Total Time for Batch Calculator</h3>
+          <p>Total Time for Batch</p>
+          <a href="batch.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
+          <h3 class="text-xl font-semibold">Efficiency / Performance Efficiency Calculator</h3>
+          <p>Performance Efficiency (PE)</p>
+          <a href="performance.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
 </body>
 </html>
