@@ -11,33 +11,91 @@
 </head>
 <body>
   <div id="site-header"></div>
+
   <main class="container section">
-    <h1>Templates</h1>
-    <p class="lead">ลิสต์เอกสาร/ฟอร์มตัวอย่าง (ปรับให้เข้ากับโรงงานของคุณได้)</p>
+    <h1>Templates & Checklists</h1>
+    <p class="lead">ลิสต์เอกสารและฟอร์มตัวอย่างที่สามารถปรับใช้กับโรงงานของคุณได้</p>
 
     <div class="grid grid-2 mt-4">
       <div class="card">
         <h3>WI (Work Instruction) Checklist</h3>
         <ul>
-          <li>เป้าหมายงานชัดเจน</li>
-          <li>ภาพประกอบ/มุมมองถูกต้อง</li>
-          <li>จุดวัด/เครื่องมือวัดระบุชัดเจน</li>
+          <li>กำหนดเป้าหมายงานอย่างชัดเจน</li>
+          <li>ภาพประกอบและมุมมองถูกต้องและชัดเจน</li>
+          <li>ระบุจุดวัด/เครื่องมือวัดอย่างชัดเจน</li>
           <li>Safety & PPE ครบถ้วน</li>
           <li>Self-Check & QC Pass Stamp</li>
+          <li>มี Revision/Version Control สำหรับอัปเดต WI</li>
         </ul>
       </div>
+
       <div class="card">
         <h3>Pre-Production Checklist</h3>
         <ul>
-          <li>Material & Lot ตรวจรับ</li>
-          <li>Tooling พร้อมใช้งาน</li>
-          <li>Machine Parameter ตาม WI</li>
-          <li>First Article Inspection ผ่าน</li>
-          <li>Backup Plan breakdown</li>
+          <li>Material & Lot ตรวจรับครบถ้วน</li>
+          <li>Tooling และ Jig พร้อมใช้งาน</li>
+          <li>Machine Parameter ตั้งตาม WI</li>
+          <li>First Article Inspection ผ่านและบันทึกผล</li>
+          <li>Backup Plan / Breakdown Plan สำหรับหยุดสายการผลิต</li>
+          <li>ตรวจสอบ Safety และ Compliance ก่อน Start Production</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Maintenance Checklist</h3>
+        <ul>
+          <li>Preventive Maintenance Schedule ครบถ้วน</li>
+          <li>เครื่องมือ/อะไหล่พร้อมสำหรับทุกเครื่องจักร</li>
+          <li>บันทึกการซ่อมและเวลา Downtime</li>
+          <li>ตรวจสอบ Lubrication / Calibration ของอุปกรณ์</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Quality Audit Checklist</h3>
+        <ul>
+          <li>ตรวจสอบ Compliance กับ WI และ SOP</li>
+          <li>ตรวจสอบ Material & Process Control</li>
+          <li>บันทึก Non-Conformance / CAPA</li>
+          <li>Audit Report & Follow-up Action</li>
         </ul>
       </div>
     </div>
+
+<section class="section mt-4">
+  <h2>Quick Download</h2>
+  <p>ดาวน์โหลด Template สำหรับ Production Engineer:</p>
+  <ul>
+    <li><a href="./assets/templates/PE_Templates.zip" download>ดาวน์โหลดไฟล์ ZIP ของ Template ทั้งหมด</a></li>
+    <li><a href="./assets/templates/APQP_Template.xlsx" download>APQP Template</a></li>
+    <li><a href="./assets/templates/PPAP_Form.xlsx" download>PPAP Forms</a></li>
+    <li><a href="./assets/templates/FMEA_Worksheet.xlsx" download>FMEA Worksheet</a></li>
+    <li><a href="./assets/templates/5S_Audit_Checklist.xlsx" download>5S Audit Checklist</a></li>
+    <li><a href="./assets/templates/Kaizen_Idea_Sheet.xlsx" download>Kaizen Idea Sheet</a></li>
+    <li><a href="./assets/templates/Maintenance_Checklist.xlsx" download>Maintenance Checklist</a></li>
+    <li><a href="./assets/templates/Quality_Audit_Checklist.xlsx" download>Quality Audit Checklist</a></li>
+  </ul>
+</section>
+    
   </main>
+
   <div id="site-footer"></div>
+
+  <script>
+    const repo = "pe-ops-studio-dark-tech-dashboard-v3";
+    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
+
+    fetch(base + "partials/header.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-header").innerHTML = data;
+      });
+
+    fetch(base + "partials/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-footer").innerHTML = data;
+      });
+  </script>
 </body>
 </html>

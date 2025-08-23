@@ -11,21 +11,105 @@
 </head>
 <body>
   <div id="site-header"></div>
+
   <main class="container section">
-    <h1>Standards</h1>
-    <p class="lead">รายการมาตรฐานที่เกี่ยวข้อง และหัวข้อการนำไปใช้</p>
+    <h1>Standards & Best Practices</h1>
+    <p class="lead">รายการมาตรฐานและแนวทางปฏิบัติที่เกี่ยวข้องกับงาน Production Engineering</p>
+
     <div class="card">
       <table class="table">
-        <thead><tr><th>มาตรฐาน</th><th>หัวข้อ</th><th>การใช้งานในโรงงาน</th></tr></thead>
+        <thead>
+          <tr>
+            <th>มาตรฐาน</th>
+            <th>หัวข้อ</th>
+            <th>การใช้งานในโรงงาน</th>
+            <th>หมายเหตุ / ตัวอย่างเอกสาร</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td>IATF 16949</td><td>Automotive QMS</td><td>APQP, PPAP, FMEA, MSA, SPC</td></tr>
-          <tr><td>ISO 9001</td><td>Quality Management</td><td>Document Control, CAPA, Internal Audit</td></tr>
-          <tr><td>ISO 14001</td><td>Environmental</td><td>Waste handling, Emission control</td></tr>
-          <tr><td>Lean / TPS</td><td>Continuous Improvement</td><td>7 Wastes, 5S, Kaizen, Kanban</td></tr>
+          <tr>
+            <td>IATF 16949</td>
+            <td>Automotive QMS</td>
+            <td>APQP, PPAP, FMEA, MSA, SPC</td>
+            <td>ใช้สำหรับการวางแผนคุณภาพยานยนต์และตรวจสอบกระบวนการผลิต</td>
+          </tr>
+          <tr>
+            <td>ISO 9001</td>
+            <td>Quality Management</td>
+            <td>Document Control, CAPA, Internal Audit</td>
+            <td>ระบบบริหารคุณภาพทั่วไป ทุกอุตสาหกรรมสามารถนำไปใช้ได้</td>
+          </tr>
+          <tr>
+            <td>ISO 14001</td>
+            <td>Environmental</td>
+            <td>Waste handling, Emission control</td>
+            <td>จัดการผลกระทบต่อสิ่งแวดล้อมและ compliance</td>
+          </tr>
+          <tr>
+            <td>Lean / TPS</td>
+            <td>Continuous Improvement</td>
+            <td>7 Wastes, 5S, Kaizen, Kanban</td>
+            <td>ปรับปรุงกระบวนการ ลดความสูญเสีย เพิ่ม productivity</td>
+          </tr>
+          <tr>
+            <td>ISO 45001</td>
+            <td>Occupational Health & Safety</td>
+            <td>Risk assessment, Safety training, Incident reporting</td>
+            <td>ความปลอดภัยของพนักงาน ลดอุบัติเหตุในโรงงาน</td>
+          </tr>
+          <tr>
+            <td>ISO 50001</td>
+            <td>Energy Management</td>
+            <td>Energy monitoring, Optimization, Audits</td>
+            <td>บริหารพลังงาน ลดค่าใช้จ่ายและ carbon footprint</td>
+          </tr>
+          <tr>
+            <td>AIAG Guidelines</td>
+            <td>Automotive Industry Guidance</td>
+            <td>PPAP, MSA, FMEA templates</td>
+            <td>ใช้ร่วมกับ IATF 16949</td>
+          </tr>
+          <tr>
+            <td>6 Sigma / DMAIC</td>
+            <td>Process Improvement</td>
+            <td>Define, Measure, Analyze, Improve, Control</td>
+            <td>ลด variation ของกระบวนการและ defect rate</td>
+          </tr>
         </tbody>
       </table>
     </div>
+
+    <section class="section mt-4">
+      <h2>Quick Links</h2>
+      <p>เว็บไซต์ชั้นนำสำหรับ Production Engineer และเอกสารมาตรฐาน:</p>
+      <ul>
+        <li><a href="https://www.aiag.org/expertise-areas/quality/quality-core-tools" target="_blank" rel="noopener">AIAG – Quality Core Tools</a></li>
+        <li><a href="https://www.iso.org/standards.html" target="_blank" rel="noopener">ISO – International Standards (ISO 9001, ISO 14001)</a></li>
+        <li><a href="https://www.safetyculture.com/checklists/" target="_blank" rel="noopener">SafetyCulture – Checklists & Audit Templates</a></li>
+        <li><a href="https://www.smartsheet.com/free-lean-six-sigma-templates" target="_blank" rel="noopener">Smartsheet – Lean & Six Sigma Templates (FMEA, 5S)</a></li>
+        <li><a href="https://www.learnleansigma.com/template/kaizen-event-template/" target="_blank" rel="noopener">Learn Lean Sigma – Kaizen & Improvement Templates</a></li>
+      </ul>
+    </section>
+
   </main>
+
   <div id="site-footer"></div>
+
+  <script>
+    const repo = "pe-ops-studio-dark-tech-dashboard-v3";
+    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
+
+    fetch(base + "partials/header.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-header").innerHTML = data;
+      });
+
+    fetch(base + "partials/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-footer").innerHTML = data;
+      });
+  </script>
 </body>
 </html>

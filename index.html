@@ -16,8 +16,8 @@
     <section class="hero">
       <div>
         <div class="tag">Production Engineering</div>
-        <h1>Dark Tech Dashboard สำหรับโรงงาน — รวม KPI, Tools, และ Schedule ในที่เดียว</h1>
-        <p>รันบน GitHub Pages แก้ไขง่าย แยกไฟล์ <span class="kbd">.html</span> <span class="kbd">.css</span> <span class="kbd">.js</span> ชัดเจน</p>
+        <h1>คลังข้อมูลสำหรับ Production Engineer</h1>
+        <p>Dashboard, Tools, Templates, และมาตรฐานโรงงานครบในที่เดียว</p>
         <div class="mt-4">
           <a class="btn" href="./tools.html">เริ่มใช้ Tools</a>
           <a class="btn secondary" href="./schedule.html">เปิดตารางงาน</a>
@@ -52,110 +52,8 @@
   </main>
 
   <div id="site-footer"></div>
+
   <script>
-    const repo = "pe-ops-studio-dark-tech-dashboard-v2";
-    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
-
-    fetch(base + "../partials/header.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("header").innerHTML = data;
-      });
-
-    fetch(base + "../partials/footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("footer").innerHTML = data;
-      });
-
-// Spark animation - Data Flow Network
-const cvs = document.getElementById('spark');
-if (cvs) {
-  const ctx = cvs.getContext('2d');
-  let w, h, t = 0;
-
-  const resize = () => {
-    w = cvs.width = cvs.clientWidth;
-    h = cvs.height = cvs.clientHeight;
-  };
-  addEventListener('resize', resize);
-  resize();
-
-  // สร้าง nodes แบบสุ่ม
-  const nodes = Array.from({ length: 15 }, () => ({
-    x: Math.random() * w,
-    y: Math.random() * h,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3
-  }));
-
-  // จุดที่วิ่งตามเส้น (packets)
-  const packets = Array.from({ length: 20 }, () => ({
-    from: Math.floor(Math.random() * nodes.length),
-    to: Math.floor(Math.random() * nodes.length),
-    progress: Math.random()
-  }));
-
-  function loop() {
-    ctx.clearRect(0, 0, w, h);
-
-    // วาดเส้นเชื่อม nodes
-    ctx.strokeStyle = "rgba(0,255,255,0.2)";
-    ctx.lineWidth = 1;
-    nodes.forEach((n1, i) => {
-      nodes.forEach((n2, j) => {
-        if (i < j) {
-          const dx = n1.x - n2.x;
-          const dy = n1.y - n2.y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < 180) {
-            ctx.beginPath();
-            ctx.moveTo(n1.x, n1.y);
-            ctx.lineTo(n2.x, n2.y);
-            ctx.stroke();
-          }
-        }
-      });
-    });
-
-    // วาด nodes
-    ctx.fillStyle = "#0ff";
-    nodes.forEach(n => {
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, 3, 0, Math.PI*2);
-      ctx.fill();
-      // ขยับ node เล็กน้อย
-      n.x += n.vx;
-      n.y += n.vy;
-      if (n.x < 0 || n.x > w) n.vx *= -1;
-      if (n.y < 0 || n.y > h) n.vy *= -1;
-    });
-
-    // วาด packets (จุดเล็กวิ่งตามเส้น)
-    ctx.fillStyle = "#ff0";
-    packets.forEach(p => {
-      const from = nodes[p.from];
-      const to = nodes[p.to];
-      const x = from.x + (to.x - from.x) * p.progress;
-      const y = from.y + (to.y - from.y) * p.progress;
-      ctx.beginPath();
-      ctx.arc(x, y, 2, 0, Math.PI*2);
-      ctx.fill();
-      p.progress += 0.01;
-      if (p.progress > 1) {
-        p.from = p.to;
-        p.to = Math.floor(Math.random() * nodes.length);
-        p.progress = 0;
-      }
-    });
-
-    t++;
-    requestAnimationFrame(loop);
-  }
-
-  loop();
-}
-
     // Fake KPI charts (edit data as needed)
     const data = {
       oee:[78,80,79,82,84,83,85,86,85,86],
@@ -163,9 +61,17 @@ if (cvs) {
       perf:[82,83,84,85,85,86,87,88,88,88],
       qty:[96,97,97,98,98,98,98,98,99,98]
     };
-    ['oee','avl','perf','qty'].forEach(k=>{
-      const c = document.getElementById(`kpi-${k}-chart`);
-      setTimeout(()=> sparkline(c, data[k]), 50);
+    
+    // Wait for main.js to be ready and then initialize charts
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        ['oee','avl','perf','qty'].forEach(k => {
+          const c = document.getElementById(`kpi-${k}-chart`);
+          if (c && typeof sparkline === 'function') {
+            sparkline(c, data[k]);
+          }
+        });
+      }, 300);
     });
   </script>
 </body>
