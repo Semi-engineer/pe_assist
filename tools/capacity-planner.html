@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Capacity Planner</title>
-  <link rel="stylesheet" href="/assets/styles.css" />
-  <script defer src="/assets/main.js"></script>
+  <title>PE Ops Studio • Capacity Planner</title>
+  <meta name="description" content="วางแผนกำลังการผลิต คำนวณ Capacity per Hour/Shift จาก Standard Time และ OEE" />
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+  <link rel="stylesheet" href="../assets/styles.css" />
+  <script defer src="../assets/main.js"></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -33,7 +35,10 @@
   </main>
   <div id="site-footer"></div>
   <script>
-    const $=id=>document.getElementById(id); const f0=x=> Math.floor(x);
+    const $=id=>document.getElementById(id); 
+    const f0=x=> Math.floor(x);
+    const qsa = sel => Array.from(document.querySelectorAll(sel));
+    
     function calc(){
       const st=+$('st').value||0, avail=+$('avail').value||0, mc=+$('mc').value||0, oee=(+$('oee').value||0)/100;
       const secAvail = avail*60;

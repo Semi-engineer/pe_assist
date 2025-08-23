@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OEE Calculator</title>
-  <link rel="stylesheet" href="/assets/styles.css" />
-  <script defer src="/assets/main.js"></script>
+  <link rel="stylesheet" href="../assets/styles.css" />
+  <script defer src="../assets/main.js"></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -37,6 +37,8 @@
   <script>
     const $=id=>document.getElementById(id);
     const pct=x=> (Math.round(x*1000)/10)+'%';
+    const qsa = sel => Array.from(document.querySelectorAll(sel));
+    
     function calc(){
       const planned=+$('planned').value||0, downtime=+$('downtime').value||0;
       const total=+$('total').value||0, ict=+$('ict').value||0, good=+$('good').value||0;

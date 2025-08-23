@@ -5,11 +5,22 @@ const qs = (sel, el=document) => el.querySelector(sel);
 const qsa = (sel, el=document) => Array.from(el.querySelectorAll(sel));
 
 // =============================
+// Path resolver for GitHub Pages
+// =============================
+function getBasePath() {
+  const path = location.pathname;
+  const isInTools = path.includes('/tools/');
+  return isInTools ? '../' : './';
+}
+
+// =============================
 // Partials loader + active nav
 // =============================
 async function loadPartial(selector, file){
   try{
-    const res = await fetch(file, {cache:'no-store'});
+    const basePath = getBasePath();
+    const fullPath = file.startsWith('./') ? basePath + file.substring(2) : file;
+    const res = await fetch(fullPath, {cache:'no-store'});
     if(!res.ok) return;
     const html = await res.text();
     qs(selector).innerHTML = html;
@@ -20,8 +31,10 @@ async function loadPartial(selector, file){
 function highlightActiveNav(){
   const current = location.pathname.split('/').pop() || 'index.html';
   qsa('a[data-nav]').forEach(a => {
-    const href = a.getAttribute('href');
-    if ((current === 'index.html' && href.endsWith('index.html')) || current === href){
+    let href = a.getAttribute('href');
+    // Normalize href for comparison
+    const hrefFile = href.split('/').pop();
+    if ((current === 'index.html' && hrefFile === 'index.html') || current === hrefFile){
       a.classList.add('active');
     } else a.classList.remove('active');
   });
@@ -227,4 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize Data Flow Network animation
   initDataFlowNetwork();
+
+  // Initialize tool filter if present
+  attachFilter('#tool-filter', '#tool-list .item');
 });
