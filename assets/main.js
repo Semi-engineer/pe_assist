@@ -105,7 +105,7 @@ function fromCSV(text){
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadPartial('#site-header', '/partials/header.html');
-  await loadPartial('#site-footer', '/partials/footer.html');
+  await loadPartial('#site-header', './partials/header.html');
+  await loadPartial('#site-footer', './partials/footer.html');
   initTheme(); initBackToTop(); initModal(); highlightActiveNav();
 });
