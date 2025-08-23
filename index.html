@@ -77,6 +77,21 @@
   <div id="site-footer"></div>
 
   <script>
+    const repo = "pe-ops-studio-dark-tech-dashboard-v2";
+    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
+
+    fetch(base + "partials/header.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+      });
+
+    fetch(base + "partials/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+
     // Spark animation
     const cvs = document.getElementById('spark');
     if (cvs){
