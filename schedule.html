@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Schedule</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script defer src="/assets/main.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="container section">
+    <h1>Schedule</h1>
+    <p class="lead">ตารางแผนงานแบบ client-side (LocalStorage + CSV import/export)</p>
+
+    <div class="card">
+      <div class="grid grid-3">
+        <div>
+          <label class="label" for="task">งาน</label>
+          <input id="task" class="input" placeholder="เช่น Setup MC #1 / Changeover" />
+        </div>
+        <div>
+          <label class="label" for="due">กำหนดวัน</label>
+          <input id="due" class="input" type="date" />
+        </div>
+        <div>
+          <label class="label" for="status">สถานะ</label>
+          <select id="status" class="select">
+            <option value="Pending">Pending</option>
+            <option value="WIP">WIP</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn" id="add">เพิ่ม</button>
+        <button class="btn secondary" id="clear">ล้างทั้งหมด</button>
+        <button class="btn secondary" id="export">Export CSV</button>
+        <label class="btn secondary" for="import-file">Import CSV</label>
+        <input id="import-file" type="file" accept=".csv" style="display:none" />
+      </div>
+
+      <div class="mt-3">
+        <label class="label" for="filter">ค้นหา</label>
+        <input id="filter" class="input" placeholder="พิมพ์คำค้นหา" />
+      </div>
+
+      <table class="table mt-4" id="tbl">
+        <thead><tr><th>งาน</th><th>วันที่</th><th>สถานะ</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+
+  <script>
+    const key='pe_tasks_v2';
+    const $=id=>document.getElementById(id);
+    const tbody = document.querySelector('#tbl tbody');
+
+    const load=()=>JSON.parse(localStorage.getItem(key)||'[]');
+    const save=v=>localStorage.setItem(key, JSON.stringify(v));
+
+    function render(){
+      const q = $('filter').value.toLowerCase().trim();
+      const data = load().filter(r => !q || JSON.stringify(r).toLowerCase().includes(q));
+      tbody.innerHTML='';
+      data.forEach((r,i)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${r.task}</td><td>${r.due||'-'}</td><td>${r.status}</td>
+          <td><button class="btn secondary" data-toggle="${i}">Toggle</button>
+              <button class="btn secondary" data-del="${i}">Del</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    $('add').addEventListener('click', ()=>{
+      const task=$('task').value.trim(); const due=$('due').value; const status=$('status').value;
+      if(!task) return toast('ใส่ชื่องานก่อนครับ');
+      const data=load(); data.push({task,due,status}); save(data);
+      $('task').value=''; $('due').value=''; render(); toast('เพิ่มรายการแล้ว');
+    });
+    $('clear').addEventListener('click', ()=>{ save([]); render(); toast('ล้างรายการแล้ว'); });
+    $('filter').addEventListener('input', render);
+
+    tbody.addEventListener('click', e=>{
+      if(e.target.dataset.toggle!==undefined){
+        const i=+e.target.dataset.toggle; const data=load();
+        const cycle = {Pending:'WIP', WIP:'Done', Done:'Pending'}; data[i].status = cycle[data[i].status]||'Pending';
+        save(data); render();
+      }
+      if(e.target.dataset.del!==undefined){
+        const i=+e.target.dataset.del; const data=load(); data.splice(i,1); save(data); render();
+      }
+    });
+
+    $('export').addEventListener('click', ()=>{
+      const rows=[['Task','Due','Status'], ...load().map(r=>[r.task,r.due,r.status])];
+      const blob=new Blob([toCSV(rows)],{type:'text/csv'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='schedule.csv'; a.click();
+    });
+    $('import-file').addEventListener('change', async (e)=>{
+      const file=e.target.files[0]; if(!file) return;
+      const text=await file.text(); const rows=fromCSV(text); rows.shift();
+      const data=rows.map(r=>({task:r[0]||'', due:r[1]||'', status:r[2]||'Pending'})).filter(r=>r.task);
+      save(data); render(); toast('นำเข้า CSV แล้ว');
+    });
+
+    render();
+  </script>
+</body>
+</html>

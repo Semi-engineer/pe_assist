@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capacity Planner</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script defer src="/assets/main.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="container section">
+    <h1>Capacity Planner</h1>
+    <p class="lead">คำนวณกำลังผลิตต่อชั่วโมง/กะ โดยใช้ Standard Time และจำนวนเครื่อง/ไลน์</p>
+
+    <div class="card">
+      <div class="grid grid-4">
+        <div><label class="label">Standard Time (sec/pc)</label><input id="st" class="input" type="number" value="25"/></div>
+        <div><label class="label">Available Time (min/shift)</label><input id="avail" class="input" type="number" value="450"/></div>
+        <div><label class="label">Machines / Lines</label><input id="mc" class="input" type="number" value="2"/></div>
+        <div><label class="label">OEE (%)</label><input id="oee" class="input" type="number" value="85"/></div>
+      </div>
+      <div class="mt-3">
+        <button class="btn" id="calc">Calculate</button>
+        <button class="btn secondary" id="reset">Reset</button>
+      </div>
+      <div class="grid grid-3 mt-4">
+        <div class="card"><h3>Capacity (pcs/hr)</h3><div id="cph">-</div></div>
+        <div class="card"><h3>Shift Output (pcs)</h3><div id="shift">-</div></div>
+        <div class="card"><h3>Daily Output (pcs)</h3><div id="day">-</div></div>
+      </div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script>
+    const $=id=>document.getElementById(id); const f0=x=> Math.floor(x);
+    function calc(){
+      const st=+$('st').value||0, avail=+$('avail').value||0, mc=+$('mc').value||0, oee=(+$('oee').value||0)/100;
+      const secAvail = avail*60;
+      const capPerLine = st>0? (secAvail/st):0;
+      const cph = st>0? (3600/st)*mc*oee : 0;
+      const shift = capPerLine*mc*oee;
+      const day = shift*2; // assume 2 shifts/day
+      $('cph').textContent = f0(cph);
+      $('shift').textContent = f0(shift);
+      $('day').textContent = f0(day);
+    }
+    $('calc').addEventListener('click', calc);
+    $('reset').addEventListener('click', ()=> qsa('.input').forEach(i=>i.value=''));
+  </script>
+</body>
+</html>

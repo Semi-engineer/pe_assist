@@ -1,98 +1,101 @@
-<!DOCTYPE html>
-<html lang="th">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Production Planning Hub</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Home</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script defer src="/assets/main.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body>
+  <div id="site-header"></div>
 
-  <header class="bg-white shadow">
-    <div class="container mx-auto p-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Production Planning Hub</h1>
-      <nav>
-        <a href="#" class="text-sky-600">หน้าหลัก</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container mx-auto p-6 space-y-10">
-
-    <!-- Hero Section -->
-    <section class="bg-white rounded-2xl shadow-lg p-6 text-center space-y-4">
-      <h2 class="text-3xl font-bold">เกี่ยวกับเครื่องมือ</h2>
-      <p class="text-slate-600">ยกระดับการวางแผนการผลิตของคุณ<br>
-      เครื่องมือและแหล่งข้อมูลสำหรับนักวางแผนการผลิตมืออาชีพ</p>
-      <a href="#tools" class="inline-block px-6 py-3 bg-sky-600 text-white rounded-full font-semibold hover:bg-sky-700 transition">เริ่มวางแผนเลย</a>
-    </section>
-
-    <!-- Tips Section -->
-    <section class="grid md:grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl shadow-lg p-6 space-y-2 text-center">
-        <h3 class="text-xl font-semibold">💡 เคล็ดลับการวางแผน</h3>
-        <p class="text-slate-500">เรียนรู้ Best Practices ในการจัดตารางเวลาและลดต้นทุนการผลิต</p>
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="tag">Production Engineering</div>
+        <h1>Dark Tech Dashboard สำหรับโรงงาน — รวม KPI, Tools, และ Schedule ในที่เดียว</h1>
+        <p>รันบน GitHub Pages แก้ไขง่าย แยกไฟล์ <span class="kbd">.html</span> <span class="kbd">.css</span> <span class="kbd">.js</span> ชัดเจน</p>
+        <div class="mt-4">
+          <a class="btn" href="/tools.html">เริ่มใช้ Tools</a>
+          <a class="btn secondary" href="/schedule.html">เปิดตารางงาน</a>
+        </div>
       </div>
-      <div class="bg-white rounded-2xl shadow-lg p-6 space-y-2 text-center">
-        <h3 class="text-xl font-semibold">📊 การวิเคราะห์ข้อมูล</h3>
-        <p class="text-slate-500">ใช้ข้อมูลเชิงลึกเพื่อปรับปรุงประสิทธิภาพการผลิตอย่างต่อเนื่อง</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow-lg p-6 space-y-2 text-center">
-        <h3 class="text-xl font-semibold">🔗 การบูรณาการ</h3>
-        <p class="text-slate-500">สร้างระบบการทำงานที่เชื่อมโยงทุกส่วนเข้าด้วยกัน</p>
+      <div class="hero-visual">
+        <canvas id="spark"></canvas>
       </div>
     </section>
 
-    <!-- Tools Section -->
-    <section id="tools" class="space-y-6">
-      <h2 class="text-2xl font-bold text-center mb-4">เครื่องมือหลัก</h2>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
-          <h3 class="text-xl font-semibold">Planner & Scheduler</h3>
-          <p>วางแผนและจัดตารางงานผลิตได้อย่างง่ายดายด้วย Gantt Chart แบบ Interactive</p>
-          <a href="planner.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+    <section class="section">
+      <h2>KPI Snapshot</h2>
+      <div class="grid grid-4 mt-3">
+        <div class="card kpi">
+          <div><div class="tag">OEE</div><div class="value" id="kpi-oee">85.2%</div></div>
+          <canvas id="kpi-oee-chart"></canvas>
         </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
-          <h3 class="text-xl font-semibold">Oil Tank Checker</h3>
-          <p>คำนวณปริมาตรน้ำมันในถังทรงกระบอก</p>
-          <a href="oil-tank.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+        <div class="card kpi">
+          <div><div class="tag">Availability</div><div class="value" id="kpi-avl">92.0%</div></div>
+          <canvas id="kpi-avl-chart"></canvas>
         </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
-          <h3 class="text-xl font-semibold">Standard Time Calculator</h3>
-          <p>Standard Time / Time Study</p>
-          <a href="standard-time.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+        <div class="card kpi">
+          <div><div class="tag">Performance</div><div class="value" id="kpi-perf">88.3%</div></div>
+          <canvas id="kpi-perf-chart"></canvas>
         </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
-          <h3 class="text-xl font-semibold">Workload Calculator</h3>
-          <p>Workload / Output per Hour</p>
-          <a href="workload.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
+        <div class="card kpi">
+          <div><div class="tag">Quality</div><div class="value" id="kpi-qty">98.1%</div></div>
+          <canvas id="kpi-qty-chart"></canvas>
         </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
-          <h3 class="text-xl font-semibold">Total Time for Batch Calculator</h3>
-          <p>Total Time for Batch</p>
-          <a href="batch.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
-          <h3 class="text-xl font-semibold">Efficiency / Performance Efficiency Calculator</h3>
-          <p>Performance Efficiency (PE)</p>
-          <a href="performance.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 space-y-3">
-          <h3 class="text-xl font-semibold">Engineering Reference Dashboard</h3>
-          <p>Performance Efficiency (PE)</p>
-          <a href="mathJax.html" class="inline-block px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700 transition">เข้าใช้งาน →</a>
-        </div>
-
       </div>
     </section>
 
+    <section class="section">
+      <h2>โครงสร้างโปรเจค</h2>
+      <div class="card">
+<pre><code>.
+├─ index.html
+├─ tools.html
+├─ standards.html
+├─ schedule.html
+├─ templates.html
+├─ about.html
+├─ assets/
+│  ├─ styles.css
+│  └─ main.js
+├─ partials/
+│  ├─ header.html
+│  └─ footer.html
+└─ tools/
+   ├─ oee.html
+   ├─ standard-time.html
+   ├─ takt-time.html
+   └─ capacity-planner.html
+</code></pre>
+      </div>
+    </section>
   </main>
+
+  <div id="site-footer"></div>
+
+  <script>
+    // Spark animation
+    const cvs = document.getElementById('spark');
+    if (cvs){
+      const ctx = cvs.getContext('2d'); let w,h,t=0; const resize=()=>{w=cvs.width=cvs.clientWidth; h=cvs.height=cvs.clientHeight}; addEventListener('resize',resize); resize();
+      (function loop(){ ctx.clearRect(0,0,w,h);
+        for(let i=0;i<180;i++){const a=i*0.035+t*0.02; const r=40+(i%5)*8+Math.sin(t*0.12+i)*2; const x=w/2+Math.cos(a)*r*3; const y=h/2+Math.sin(a)*r*1.3; ctx.globalAlpha=.6; ctx.fillRect(x,y,2,2);} t++; requestAnimationFrame(loop);
+      })();
+    }
+    // Fake KPI charts (edit data as needed)
+    const data = {
+      oee:[78,80,79,82,84,83,85,86,85,86],
+      avl:[88,90,89,91,92,91,92,93,92,92],
+      perf:[82,83,84,85,85,86,87,88,88,88],
+      qty:[96,97,97,98,98,98,98,98,99,98]
+    };
+    ['oee','avl','perf','qty'].forEach(k=>{
+      const c = document.getElementById(`kpi-${k}-chart`);
+      setTimeout(()=> sparkline(c, data[k]), 50);
+    });
+  </script>
 </body>
 </html>
