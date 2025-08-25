@@ -6,10 +6,16 @@
   <title>PE Ops Studio • Capacity Planner</title>
   <meta name="description" content="วางแผนกำลังการผลิต คำนวณ Capacity per Hour/Shift จาก Standard Time และ OEE" />
   <link rel="stylesheet" href="../assets/styles.css" />
-  <script defer src="../assets/main.js"></script>
+
+  <!-- JS: แยกโมดูล -->
+  <script defer src="../assets/js/partials.js"></script>
+  <script defer src="../assets/js/ui.js"></script>
+  <script defer src="../assets/js/capacity.js"></script>
 </head>
 <body>
+  <!-- Header partial -->
   <div id="site-header"></div>
+
   <main class="container section">
     <h1>Capacity Planner</h1>
     <p class="lead">คำนวณกำลังผลิตต่อชั่วโมง/กะ โดยใช้ Standard Time และจำนวนเครื่อง/ไลน์</p>
@@ -42,24 +48,10 @@
         <div class="card"><h3>Shift Output (pcs)</h3><div id="shift">-</div></div>
         <div class="card"><h3>Daily Output (pcs)</h3><div id="day">-</div></div>
       </div>
+    </div>
+  </main>
+
+  <!-- Footer partial -->
   <div id="site-footer"></div>
-  </script>
-  <script>
-    const repo = "pe-ops-studio-dark-tech-dashboard-v3";
-    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
-
-    fetch(base + "partials/header.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("site-header").innerHTML = data;
-      });
-
-    fetch(base + "partials/footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("site-footer").innerHTML = data;
-      });
-  </script>
-
 </body>
 </html>

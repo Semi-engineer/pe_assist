@@ -6,6 +6,7 @@
   <title>PE Ops Studio • Schedule (No-ChartJS)</title>
   <meta name="description" content="ตารางแผนงาน Production Schedule พร้อม Gantt Chart (SVG) และระบบ import/export CSV" />
   <link rel="stylesheet" href="./assets/styles.css" />
+  <script defer src="./assets/js/schedule.js"></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -15,7 +16,6 @@
     <p class="lead">ตารางแผนงาน (LocalStorage + CSV import/export) พร้อม <b>Gantt Chart (SVG custom, no Chart.js)</b></p>
 
     <div class="card">
-      <!-- ฟอร์ม -->
       <div class="grid grid-4">
         <div>
           <label class="label" for="task">งาน</label>
@@ -63,7 +63,8 @@
         <div id="tooltip"></div>
       </div>
     </div>
-  <script defer src="./assets/main.js"></script>
+  </main>
+
   <div id="site-footer"></div>
 
   <script>

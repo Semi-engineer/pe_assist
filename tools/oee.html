@@ -3,23 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OEE Calculator</title>
-  <link rel="stylesheet" href="../assets/styles.css" />
-  <script defer src="../assets/main.js"></script>
+  <title>PE Ops Studio • OEE Calculator</title>
+  <meta name="description" content="คำนวณ Availability, Performance, Quality และ OEE" />
+  <link rel="stylesheet" href="../assets/styles.css">
+
+
+  <!-- JS modules -->
+  <script defer src="../assets/js/partials.js"></script>
+  <script defer src="../assets/js/ui.js"></script>
+  <script defer src="../assets/js/oee.js"></script>
 </head>
 <body>
+  <!-- Header partial -->
   <div id="site-header"></div>
+
   <main class="container section">
     <h1>OEE Calculator</h1>
     <p class="lead">คำนวณ Availability, Performance, Quality และ OEE</p>
 
     <div class="card">
       <div class="grid grid-4">
-        <div><label class="label" for="planned">Planned Time (min)</label><input class="input" id="planned" type="number" value="480" title="Planned Time in minutes" placeholder="Enter planned time (min)"/></div>
-        <div><label class="label" for="downtime">Downtime (min)</label><input class="input" id="downtime" type="number" value="45" title="Downtime in minutes" placeholder="Enter downtime (min)"/></div>
-        <div><label class="label" for="total">Total Count (pcs)</label><input class="input" id="total" type="number" value="1200" title="Total Count in pieces" placeholder="Enter total count (pcs)"/></div>
-        <div><label class="label" for="ict">Ideal Cycle (sec/pc)</label><input class="input" id="ict" type="number" value="20" title="Ideal Cycle Time in seconds per piece" placeholder="Enter ideal cycle (sec/pc)"/></div>
-        <div><label class="label" for="good">Good Count (pcs)</label><input class="input" id="good" type="number" value="1150" title="Good Count in pieces" placeholder="Enter good count (pcs)"/></div>
+        <div>
+          <label class="label" for="planned">Planned Time (min)</label>
+          <input class="input" id="planned" type="number" value="480" title="Planned Time in minutes" placeholder="Enter planned time (min)"/>
+        </div>
+        <div>
+          <label class="label" for="downtime">Downtime (min)</label>
+          <input class="input" id="downtime" type="number" value="45" title="Downtime in minutes" placeholder="Enter downtime (min)"/>
+        </div>
+        <div>
+          <label class="label" for="total">Total Count (pcs)</label>
+          <input class="input" id="total" type="number" value="1200" title="Total Count in pieces" placeholder="Enter total count (pcs)"/>
+        </div>
+        <div>
+          <label class="label" for="ict">Ideal Cycle (sec/pc)</label>
+          <input class="input" id="ict" type="number" value="20" title="Ideal Cycle Time in seconds per piece" placeholder="Enter ideal cycle (sec/pc)"/>
+        </div>
+        <div>
+          <label class="label" for="good">Good Count (pcs)</label>
+          <input class="input" id="good" type="number" value="1150" title="Good Count in pieces" placeholder="Enter good count (pcs)"/>
+        </div>
       </div>
       <div class="mt-3">
         <button class="btn" id="calc">Calculate</button>
@@ -33,45 +56,8 @@
       </div>
     </div>
   </main>
+
+  <!-- Footer partial -->
   <div id="site-footer"></div>
-  <script>
-    const $=id=>document.getElementById(id);
-    const pct=x=> (Math.round(x*1000)/10)+'%';
-    const qsa = sel => Array.from(document.querySelectorAll(sel));
-    
-    function calc(){
-      const planned=+$('planned').value||0, downtime=+$('downtime').value||0;
-      const total=+$('total').value||0, ict=+$('ict').value||0, good=+$('good').value||0;
-      const runtime=Math.max(planned-downtime,0);
-      const availability= planned? runtime/planned:0;
-      const ideal = total*(ict/60);
-      const performance = (runtime && ideal) ? Math.min(ideal/runtime,1):0;
-      const quality = total? (good/total):0;
-      const oee = availability*performance*quality;
-      $('availability').textContent=pct(availability);
-      $('performance').textContent=pct(performance);
-      $('quality').textContent=pct(quality);
-      $('oee').textContent=pct(oee);
-    }
-    $('calc').addEventListener('click', calc);
-    $('reset').addEventListener('click', ()=> qsa('.input').forEach(i=>i.value=''));
-  </script>
-  <script>
-    const repo = "pe-ops-studio-dark-tech-dashboard-v3";
-    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
-
-    fetch(base + "partials/header.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("site-header").innerHTML = data;
-      });
-
-    fetch(base + "partials/footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("site-footer").innerHTML = data;
-      });
-  </script>
-
 </body>
 </html>
