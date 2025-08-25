@@ -1,29 +1,76 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PE Ops Studio • Schedule</title>
-  <meta name="description" content="ตารางแผนงาน Production Schedule พร้อมระบบ import/export CSV" />
-  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <title>PE Ops Studio • Schedule (No-ChartJS)</title>
+  <meta name="description" content="ตารางแผนงาน Production Schedule พร้อม Gantt Chart (SVG) และระบบ import/export CSV" />
   <link rel="stylesheet" href="./assets/styles.css" />
-  <script defer src="./assets/main.js"></script>
+  <style>
+    /* Fallback minimal styles หากไม่มี styles.css */
+    :root { --gap: .75rem; }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5;margin:0;background:#0b0e13;color:#e6e8eb}
+    .container{max-width:1100px;margin:auto;padding:24px}
+    .section{margin-top:16px}
+    .lead{opacity:.85}
+    .card{background:#121722;border:1px solid #2a3244;border-radius:16px;padding:16px}
+    .grid{display:grid;gap:var(--gap)}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .label{display:block;margin-bottom:6px;font-size:.9rem;opacity:.9}
+    .input,.select{width:100%;padding:10px 12px;border:1px solid #313a4e;border-radius:10px;background:#0f1420;color:#e6e8eb}
+    .btn{display:inline-block;border:1px solid #3a445c;background:#1b2232;color:#e6e8eb;border-radius:999px;padding:8px 14px;cursor:pointer}
+    .btn.secondary{background:#0f1420}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .mt-3{margin-top:1rem}.mt-4{margin-top:1.5rem}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #2a3244}
+    th{text-align:left;opacity:.9}
+    .status-badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.8rem}
+    .status-Pending{background:#3b0b0b;border:1px solid #ef4444;color:#fecaca}
+    .status-WIP{background:#3b2a07;border:1px solid #eab308;color:#fde68a}
+    .status-Done{background:#073b21;border:1px solid #22c55e;color:#bbf7d0}
+    /* Gantt */
+    #ganttWrap{position:relative; background:#0f1420;border:1px solid #2a3244;border-radius:12px; overflow:auto}
+    #ganttSvg{width:100%; height:420px; display:block}
+    .g-grid{stroke:rgba(148,163,184,.15); stroke-width:1}
+    .g-axis{fill:#cbd5e1; font-size:12px}
+    .g-task{rx:6; ry:6; cursor:pointer}
+    .g-task.pending{fill:rgba(239,68,68,.75)}
+    .g-task.wip{fill:rgba(234,179,8,.8)}
+    .g-task.done{fill:rgba(34,197,94,.8)}
+    .g-task:hover{opacity:.9}
+    .g-label{fill:#e5e7eb; font-size:12px; dominant-baseline:middle}
+    .g-ybg{fill:#0c1220}
+    #tooltip{
+      position:absolute; pointer-events:none; padding:8px 10px; background:#111827; border:1px solid #374151;
+      color:#e5e7eb; border-radius:10px; font-size:.85rem; box-shadow:0 10px 30px rgba(0,0,0,.35); display:none; z-index:3
+    }
+    /* toast fallback */
+    #toast{position:fixed;right:16px;bottom:16px;z-index:9999}
+    .toast{background:#111827;color:#e6e8eb;border:1px solid #374151;border-radius:12px;padding:10px 14px;margin-top:8px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  </style>
 </head>
 <body>
   <div id="site-header"></div>
+
   <main class="container section">
     <h1>Schedule</h1>
-    <p class="lead">ตารางแผนงานแบบ client-side (LocalStorage + CSV import/export)</p>
+    <p class="lead">ตารางแผนงาน (LocalStorage + CSV import/export) พร้อม <b>Gantt Chart (SVG custom, no Chart.js)</b></p>
 
     <div class="card">
-      <div class="grid grid-3">
+      <!-- ฟอร์ม -->
+      <div class="grid grid-4">
         <div>
           <label class="label" for="task">งาน</label>
           <input id="task" class="input" placeholder="เช่น Setup MC #1 / Changeover" />
         </div>
         <div>
-          <label class="label" for="due">กำหนดวัน</label>
-          <input id="due" class="input" type="date" />
+          <label class="label" for="start">วันเริ่ม</label>
+          <input id="start" class="input" type="date" />
+        </div>
+        <div>
+          <label class="label" for="end">วันสิ้นสุด</label>
+          <input id="end" class="input" type="date" />
         </div>
         <div>
           <label class="label" for="status">สถานะ</label>
@@ -34,6 +81,7 @@
           </select>
         </div>
       </div>
+
       <div class="mt-3">
         <button class="btn" id="add">เพิ่ม</button>
         <button class="btn secondary" id="clear">ล้างทั้งหมด</button>
@@ -48,66 +96,329 @@
       </div>
 
       <table class="table mt-4" id="tbl">
-        <thead><tr><th>งาน</th><th>วันที่</th><th>สถานะ</th><th></th></tr></thead>
+        <thead><tr><th>งาน</th><th>เริ่ม</th><th>สิ้นสุด</th><th>สถานะ</th><th></th></tr></thead>
         <tbody></tbody>
       </table>
+
+      <h2 class="mt-4">Gantt Chart (SVG)</h2>
+      <div id="ganttWrap">
+        <svg id="ganttSvg"></svg>
+        <div id="tooltip"></div>
+      </div>
     </div>
   </main>
+
   <div id="site-footer"></div>
+  <div id="toast"></div>
 
   <script>
-    const key='pe_tasks_v2';
-    const $=id=>document.getElementById(id);
+    /* ===== Helpers (fallback) ===== */
+    (function(){ 
+      if (typeof window.toast === 'function') return;
+      window.toast = function(msg, ms=2200){
+        const wrap = document.getElementById('toast');
+        const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateY(8px)'; }, ms-300);
+        setTimeout(()=> wrap.removeChild(el), ms);
+      };
+    })();
+
+    (function(){
+      if (typeof window.toCSV === 'function' && typeof window.fromCSV === 'function') return;
+      window.toCSV = rows =>
+        rows.map(r => r.map(v=>{
+          const s = (v??'').toString();
+          return /[,"\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+        }).join(',')).join('\n');
+      window.fromCSV = text => {
+        const rows = []; const re = /("([^"]|"")*"|[^,\n\r]*)(,|\r?\n|\r|$)/g;
+        let row=[], m; while((m=re.exec(text))!==null){
+          let cell = m[1]||''; if(cell.startsWith('"')) cell = cell.slice(1,-1).replace(/""/g,'"');
+          row.push(cell); const sep=m[3]; if(sep===',') continue;
+          rows.push(row); row=[]; if(!sep) break;
+        } return rows;
+      };
+    })();
+
+    /* ===== Core Data ===== */
+    const key='pe_tasks_v3'; // รุ่น start/end
+    const legacyKey='pe_tasks_v2'; // รุ่น due
+
+    const $ = id => document.getElementById(id);
     const tbody = document.querySelector('#tbl tbody');
 
-    const load=()=>JSON.parse(localStorage.getItem(key)||'[]');
-    const save=v=>localStorage.setItem(key, JSON.stringify(v));
+    const load = () => JSON.parse(localStorage.getItem(key)||'[]');
+    const save = v => localStorage.setItem(key, JSON.stringify(v));
+
+    // migrate v2 -> v3
+    (function migrate(){
+      if (localStorage.getItem(key)) return;
+      const v2 = JSON.parse(localStorage.getItem(legacyKey)||'[]');
+      if (Array.isArray(v2) && v2.length){
+        const v3 = v2.map(r => ({
+          task: r.task || '',
+          start: r.due || '',
+          end:   r.due || '',
+          status: r.status || 'Pending'
+        }));
+        save(v3);
+        toast('แปลงข้อมูล due → start/end แล้ว');
+      }
+    })();
+
+    /* ===== UI/Table ===== */
+    function escapeHtml(s){
+      return (s??'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
 
     function render(){
       const q = $('filter').value.toLowerCase().trim();
       const data = load().filter(r => !q || JSON.stringify(r).toLowerCase().includes(q));
+
       tbody.innerHTML='';
       data.forEach((r,i)=>{
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${r.task}</td><td>${r.due||'-'}</td><td>${r.status}</td>
-          <td><button class="btn secondary" data-toggle="${i}">Toggle</button>
-              <button class="btn secondary" data-del="${i}">Del</button></td>`;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(r.task)}</td>
+          <td>${r.start||'-'}</td>
+          <td>${r.end||'-'}</td>
+          <td><span class="status-badge status-${r.status}">${r.status}</span></td>
+          <td>
+            <button class="btn secondary" data-edit="${i}">Edit</button>
+            <button class="btn secondary" data-toggle="${i}">Toggle</button>
+            <button class="btn secondary" data-del="${i}">Del</button>
+          </td>`;
         tbody.appendChild(tr);
       });
+
+      drawGantt(data);
     }
 
     $('add').addEventListener('click', ()=>{
-      const task=$('task').value.trim(); const due=$('due').value; const status=$('status').value;
+      const task=$('task').value.trim();
+      const start=$('start').value;
+      const end=$('end').value;
+      const status=$('status').value;
       if(!task) return toast('ใส่ชื่องานก่อนครับ');
-      const data=load(); data.push({task,due,status}); save(data);
-      $('task').value=''; $('due').value=''; render(); toast('เพิ่มรายการแล้ว');
+      if(start && end && new Date(end) < new Date(start)) return toast('วันสิ้นสุดต้องไม่ก่อนวันเริ่ม');
+
+      const data=load(); data.push({task,start,end,status}); save(data);
+      $('task').value=''; $('start').value=''; $('end').value='';
+      render(); toast('เพิ่มรายการแล้ว');
     });
-    $('clear').addEventListener('click', ()=>{ save([]); render(); toast('ล้างรายการแล้ว'); });
+
+    $('clear').addEventListener('click', ()=>{
+      if(!confirm('ล้างรายการทั้งหมด?')) return;
+      save([]); render(); toast('ล้างรายการแล้ว');
+    });
+
     $('filter').addEventListener('input', render);
 
     tbody.addEventListener('click', e=>{
-      if(e.target.dataset.toggle!==undefined){
-        const i=+e.target.dataset.toggle; const data=load();
-        const cycle = {Pending:'WIP', WIP:'Done', Done:'Pending'}; data[i].status = cycle[data[i].status]||'Pending';
+      const t=e.target;
+      if(t.dataset.toggle!==undefined){
+        const i=+t.dataset.toggle; const data=load();
+        const cycle={Pending:'WIP', WIP:'Done', Done:'Pending'}; data[i].status = cycle[data[i].status]||'Pending';
         save(data); render();
       }
-      if(e.target.dataset.del!==undefined){
-        const i=+e.target.dataset.del; const data=load(); data.splice(i,1); save(data); render();
+      if(t.dataset.del!==undefined){
+        const i=+t.dataset.del; const data=load();
+        data.splice(i,1); save(data); render();
+      }
+      if(t.dataset.edit!==undefined){
+        const i=+t.dataset.edit; const data=load(); const r=data[i];
+        const task = prompt('แก้ไขชื่อ งาน:', r.task) ?? r.task;
+        const start = prompt('แก้ไขวันเริ่ม (YYYY-MM-DD):', r.start) ?? r.start;
+        const end   = prompt('แก้ไขวันสิ้นสุด (YYYY-MM-DD):', r.end) ?? r.end;
+        const status= prompt('แก้ไขสถานะ (Pending/WIP/Done):', r.status) ?? r.status;
+        data[i] = {task,start,end,status}; save(data); render();
       }
     });
 
     $('export').addEventListener('click', ()=>{
-      const rows=[['Task','Due','Status'], ...load().map(r=>[r.task,r.due,r.status])];
+      const rows=[['Task','Start','End','Status'], ...load().map(r=>[r.task,r.start,r.end,r.status])];
       const blob=new Blob([toCSV(rows)],{type:'text/csv'});
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='schedule.csv'; a.click();
     });
-    $('import-file').addEventListener('change', async (e)=>{
+
+    $('import-file').addEventListener('change', async e=>{
       const file=e.target.files[0]; if(!file) return;
-      const text=await file.text(); const rows=fromCSV(text); rows.shift();
-      const data=rows.map(r=>({task:r[0]||'', due:r[1]||'', status:r[2]||'Pending'})).filter(r=>r.task);
+      const text=await file.text(); const rows=fromCSV(text); if(!rows.length) return toast('ไฟล์ว่างหรือรูปแบบผิด');
+      const header = rows.shift().map(h=>h.trim().toLowerCase());
+      const isNew = header.includes('start') || header.includes('end');
+      const idx = name => header.indexOf(name);
+      const map = {
+        task: idx('task'),
+        start: isNew ? idx('start') : idx('due'),
+        end:   isNew ? idx('end')   : idx('due'),
+        status: idx('status')
+      };
+      const data = rows.map(r=>({task:r[map.task]||'', start:r[map.start]||'', end:r[map.end]||'', status:r[map.status]||'Pending'})).filter(r=>r.task);
       save(data); render(); toast('นำเข้า CSV แล้ว');
+      e.target.value='';
     });
 
+    /* ===== Gantt (SVG) ===== */
+    function drawGantt(rows){
+      const svg = $('ganttSvg');
+      const tooltip = $('tooltip');
+      const wrap = $('ganttWrap');
+      const width = wrap.clientWidth || 1000;
+
+      // layout
+      const margin = {top: 30, right: 20, bottom: 30, left: 160};
+      const barH = 26, gap = 10;
+      const items = rows.filter(r => r.start && r.end);
+      const height = Math.max(160, margin.top + margin.bottom + items.length * (barH + gap) + 6);
+
+      // init svg
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+      // no data
+      if(!items.length){
+        const msg = document.createElementNS('http://www.w3.org/2000/svg','text');
+        msg.setAttribute('x', width/2); msg.setAttribute('y', height/2);
+        msg.setAttribute('text-anchor','middle'); msg.setAttribute('class','g-axis');
+        msg.textContent = 'ไม่มีข้อมูลที่มี Start/End';
+        svg.appendChild(msg);
+        return;
+      }
+
+      // time domain
+      const times = items.flatMap(r => [new Date(r.start).getTime(), new Date(r.end).getTime()]);
+      let tMin = Math.min(...times), tMax = Math.max(...times);
+      // pad 1 day
+      const oneDay = 86400000;
+      tMin -= oneDay; tMax += oneDay;
+      const span = tMax - tMin;
+
+      // axis ticks (ปรับเป็นวัน/สัปดาห์/เดือน แบบง่าย)
+      const spanDays = Math.ceil(span / oneDay);
+      let stepDays = 1;
+      if (spanDays > 14 && spanDays <= 60) stepDays = 7;
+      else if (spanDays > 60 && spanDays <= 365) stepDays = 30;
+      else if (spanDays > 365) stepDays = 90;
+
+      function* tickGen(){
+        const d0 = new Date(tMin);
+        d0.setHours(0,0,0,0);
+        // align start to step
+        while (d0.getTime() < tMin) d0.setDate(d0.getDate()+1);
+        const dt = new Date(d0);
+        while (dt.getTime() <= tMax){
+          yield new Date(dt.getTime());
+          dt.setDate(dt.getDate()+stepDays);
+        }
+      }
+
+      // scale
+      const x0 = margin.left, x1 = width - margin.right;
+      const y0 = margin.top;
+      const innerW = x1 - x0;
+
+      const x = t => x0 + ( (t - tMin) / (tMax - tMin) ) * innerW;
+
+      // background for rows (zebra)
+      items.forEach((r, idx)=>{
+        const y = y0 + idx*(barH+gap);
+        const rowBg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+        rowBg.setAttribute('x', 0);
+        rowBg.setAttribute('y', y - 2);
+        rowBg.setAttribute('width', width);
+        rowBg.setAttribute('height', barH + 4);
+        rowBg.setAttribute('class','g-ybg');
+        if (idx % 2 === 0) rowBg.setAttribute('opacity','0.35');
+        else rowBg.setAttribute('opacity','0.15');
+        svg.appendChild(rowBg);
+      });
+
+      // vertical grid + x labels
+      for (const d of tickGen()){
+        const xt = x(d.getTime());
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', xt); line.setAttribute('x2', xt);
+        line.setAttribute('y1', margin.top - 10); line.setAttribute('y2', height - margin.bottom + 6);
+        line.setAttribute('class','g-grid');
+        svg.appendChild(line);
+
+        const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+        txt.setAttribute('x', xt);
+        txt.setAttribute('y', height - margin.bottom + 20);
+        txt.setAttribute('text-anchor','middle');
+        txt.setAttribute('class','g-axis');
+        txt.textContent = fmtDate(d);
+        svg.appendChild(txt);
+      }
+
+      // y labels (task names)
+      items.forEach((r, idx)=>{
+        const y = y0 + idx*(barH+gap) + barH/2;
+        const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+        label.setAttribute('x', margin.left - 10);
+        label.setAttribute('y', y);
+        label.setAttribute('text-anchor','end');
+        label.setAttribute('class','g-label');
+        label.textContent = r.task;
+        svg.appendChild(label);
+      });
+
+      // bars
+      items.forEach((r, idx)=>{
+        const s = new Date(r.start).getTime();
+        const e = new Date(r.end).getTime();
+        const y = y0 + idx*(barH+gap);
+
+        const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+        rect.setAttribute('x', x(s));
+        rect.setAttribute('y', y);
+        rect.setAttribute('width', Math.max(2, x(e) - x(s)));
+        rect.setAttribute('height', barH);
+
+        const st = (r.status||'Pending').toLowerCase();
+        rect.setAttribute('class', 'g-task ' + (st==='pending'?'pending':st==='wip'?'wip':'done'));
+        rect.addEventListener('mouseenter', ev=>{
+          tooltip.style.display='block';
+          tooltip.innerHTML = `
+            <div><b>${escapeHtml(r.task)}</b></div>
+            <div>Start: ${r.start||'-'}</div>
+            <div>End&nbsp;&nbsp;: ${r.end||'-'}</div>
+            <div>Status: ${r.status||'-'}</div>`;
+        });
+        rect.addEventListener('mousemove', ev=>{
+          const bb = wrap.getBoundingClientRect();
+          const pad = 10;
+          tooltip.style.left = (ev.clientX - bb.left + pad) + 'px';
+          tooltip.style.top  = (ev.clientY - bb.top  + pad) + 'px';
+        });
+        rect.addEventListener('mouseleave', ()=>{ tooltip.style.display='none'; });
+        svg.appendChild(rect);
+      });
+
+      // x axis title
+      const ax = document.createElementNS('http://www.w3.org/2000/svg','text');
+      ax.setAttribute('x', (x0 + x1)/2);
+      ax.setAttribute('y', height - 6);
+      ax.setAttribute('text-anchor','middle');
+      ax.setAttribute('class','g-axis');
+      ax.textContent = 'เวลา';
+      svg.appendChild(ax);
+    }
+
+    function fmtDate(d){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    // responsive redraw
+    window.addEventListener('resize', ()=> drawGantt(load().filter(r=>r.start&&r.end)));
+
+    // init
     render();
   </script>
 </body>
