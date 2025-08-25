@@ -44,7 +44,7 @@
         <button class="btn secondary" id="clear">ล้างทั้งหมด</button>
         <button class="btn secondary" id="export">Export CSV</button>
         <label class="btn secondary" for="import-file">Import CSV</label>
-        <input id="import-file" type="file" accept=".csv" class="hidden-file-input" />
+        <input id="import-file" type="file" accept=".csv" style="display:none" />
       </div>
 
       <div class="mt-3">
@@ -64,5 +64,23 @@
       </div>
     </div>
   <script defer src="./assets/main.js"></script>
+  <div id="site-footer"></div>
+
+  <script>
+    const repo = "pe-ops-studio-dark-tech-dashboard-v3";
+    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
+
+    fetch(base + "partials/header.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-header").innerHTML = data;
+      });
+
+    fetch(base + "partials/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-footer").innerHTML = data;
+      });
+  </script>
 </body>
 </html>

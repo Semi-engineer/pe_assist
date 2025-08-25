@@ -258,7 +258,6 @@ function drawGanttChart(rows) {
   ax.setAttribute('y', height - 6);
   ax.setAttribute('text-anchor', 'middle');
   ax.setAttribute('class', 'g-axis');
-  ax.textContent = 'เวลา';
   svg.appendChild(ax);
 }
 function fmtDate(d) {

@@ -56,5 +56,22 @@
     $('calc').addEventListener('click', calc);
     $('reset').addEventListener('click', ()=> qsa('.input').forEach(i=>i.value=''));
   </script>
+  <script>
+    const repo = "pe-ops-studio-dark-tech-dashboard-v3";
+    const base = window.location.pathname.includes(`/${repo}/`) ? `/${repo}/` : "/";
+
+    fetch(base + "partials/header.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-header").innerHTML = data;
+      });
+
+    fetch(base + "partials/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("site-footer").innerHTML = data;
+      });
+  </script>
+
 </body>
 </html>
