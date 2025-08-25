@@ -15,11 +15,11 @@
 
     <div class="card">
       <div class="grid grid-4">
-        <div><label class="label">Planned Time (min)</label><input class="input" id="planned" type="number" value="480"/></div>
-        <div><label class="label">Downtime (min)</label><input class="input" id="downtime" type="number" value="45"/></div>
-        <div><label class="label">Total Count (pcs)</label><input class="input" id="total" type="number" value="1200"/></div>
-        <div><label class="label">Ideal Cycle (sec/pc)</label><input class="input" id="ict" type="number" value="20"/></div>
-        <div><label class="label">Good Count (pcs)</label><input class="input" id="good" type="number" value="1150"/></div>
+        <div><label class="label" for="planned">Planned Time (min)</label><input class="input" id="planned" type="number" value="480" title="Planned Time in minutes" placeholder="Enter planned time (min)"/></div>
+        <div><label class="label" for="downtime">Downtime (min)</label><input class="input" id="downtime" type="number" value="45" title="Downtime in minutes" placeholder="Enter downtime (min)"/></div>
+        <div><label class="label" for="total">Total Count (pcs)</label><input class="input" id="total" type="number" value="1200" title="Total Count in pieces" placeholder="Enter total count (pcs)"/></div>
+        <div><label class="label" for="ict">Ideal Cycle (sec/pc)</label><input class="input" id="ict" type="number" value="20" title="Ideal Cycle Time in seconds per piece" placeholder="Enter ideal cycle (sec/pc)"/></div>
+        <div><label class="label" for="good">Good Count (pcs)</label><input class="input" id="good" type="number" value="1150" title="Good Count in pieces" placeholder="Enter good count (pcs)"/></div>
       </div>
       <div class="mt-3">
         <button class="btn" id="calc">Calculate</button>

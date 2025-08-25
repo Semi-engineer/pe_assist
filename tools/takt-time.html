@@ -17,9 +17,9 @@
 
     <div class="card">
       <div class="grid grid-4">
-        <div><label class="label">Available Time (min/shift)</label><input id="avail" class="input" type="number" value="450"/></div>
-        <div><label class="label">Break (min/shift)</label><input id="break" class="input" type="number" value="30"/></div>
-        <div><label class="label">Customer Demand (pcs/shift)</label><input id="demand" class="input" type="number" value="800"/></div>
+        <div><label class="label" for="avail">Available Time (min/shift)</label><input id="avail" class="input" type="number" value="450" title="Available Time in minutes per shift" placeholder="e.g. 450"/></div>
+        <div><label class="label" for="break">Break (min/shift)</label><input id="break" class="input" type="number" value="30" title="Break time in minutes per shift" placeholder="e.g. 30"/></div>
+        <div><label class="label" for="demand">Customer Demand (pcs/shift)</label><input id="demand" class="input" type="number" value="800" title="Customer Demand in pieces per shift" placeholder="e.g. 800"/></div>
       </div>
       <div class="mt-3">
         <button class="btn" id="calc">Calculate</button>

@@ -17,10 +17,22 @@
 
     <div class="card">
       <div class="grid grid-4">
-        <div><label class="label">Standard Time (sec/pc)</label><input id="st" class="input" type="number" value="25"/></div>
-        <div><label class="label">Available Time (min/shift)</label><input id="avail" class="input" type="number" value="450"/></div>
-        <div><label class="label">Machines / Lines</label><input id="mc" class="input" type="number" value="2"/></div>
-        <div><label class="label">OEE (%)</label><input id="oee" class="input" type="number" value="85"/></div>
+        <div>
+          <label class="label" for="st">Standard Time (sec/pc)</label>
+          <input id="st" class="input" type="number" value="25" title="Standard Time in seconds per piece" placeholder="e.g. 25"/>
+        </div>
+        <div>
+          <label class="label" for="avail">Available Time (min/shift)</label>
+          <input id="avail" class="input" type="number" value="450" title="Available Time in minutes per shift" placeholder="e.g. 450"/>
+        </div>
+        <div>
+          <label class="label" for="mc">Machines / Lines</label>
+          <input id="mc" class="input" type="number" value="2" title="Number of Machines or Lines" placeholder="e.g. 2"/>
+        </div>
+        <div>
+          <label class="label" for="oee">OEE (%)</label>
+          <input id="oee" class="input" type="number" value="85" title="Overall Equipment Effectiveness in percent" placeholder="e.g. 85"/>
+        </div>
       </div>
       <div class="mt-3">
         <button class="btn" id="calc">Calculate</button>
@@ -34,24 +46,6 @@
     </div>
   </main>
   <div id="site-footer"></div>
-  <script>
-    const $=id=>document.getElementById(id); 
-    const f0=x=> Math.floor(x);
-    const qsa = sel => Array.from(document.querySelectorAll(sel));
-    
-    function calc(){
-      const st=+$('st').value||0, avail=+$('avail').value||0, mc=+$('mc').value||0, oee=(+$('oee').value||0)/100;
-      const secAvail = avail*60;
-      const capPerLine = st>0? (secAvail/st):0;
-      const cph = st>0? (3600/st)*mc*oee : 0;
-      const shift = capPerLine*mc*oee;
-      const day = shift*2; // assume 2 shifts/day
-      $('cph').textContent = f0(cph);
-      $('shift').textContent = f0(shift);
-      $('day').textContent = f0(day);
-    }
-    $('calc').addEventListener('click', calc);
-    $('reset').addEventListener('click', ()=> qsa('.input').forEach(i=>i.value=''));
-  </script>
+  <!-- JS logic moved to main.js for maintainability -->
 </body>
 </html>

@@ -53,26 +53,5 @@
 
   <div id="site-footer"></div>
 
-  <script>
-    // Fake KPI charts (edit data as needed)
-    const data = {
-      oee:[78,80,79,82,84,83,85,86,85,86],
-      avl:[88,90,89,91,92,91,92,93,92,92],
-      perf:[82,83,84,85,85,86,87,88,88,88],
-      qty:[96,97,97,98,98,98,98,98,99,98]
-    };
-    
-    // Wait for main.js to be ready and then initialize charts
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        ['oee','avl','perf','qty'].forEach(k => {
-          const c = document.getElementById(`kpi-${k}-chart`);
-          if (c && typeof sparkline === 'function') {
-            sparkline(c, data[k]);
-          }
-        });
-      }, 300);
-    });
-  </script>
 </body>
 </html>
