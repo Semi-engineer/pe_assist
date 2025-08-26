@@ -1,5 +1,3 @@
-// main.js (refactor version)
-
 // =============================
 // Utilities
 // =============================
@@ -25,11 +23,22 @@ const Utils = (() => {
 // Partials Loader
 // =============================
 const Partials = (() => {
+  const { qs, qsa } = Utils;
+
+  // หา base path อัตโนมัติ (รองรับ project page)
+  const getBasePath = () => {
+    const pathParts = location.pathname.split('/');
+    const repoIndex = pathParts.indexOf('pe_assist'); // เปลี่ยนเป็นชื่อ repo ของคุณ
+    if (repoIndex >= 0) {
+      return '/' + pathParts.slice(1, repoIndex + 1).join('/') + '/';
+    }
+    return '/';
+  };
+  const basePath = getBasePath();
+
   const loadPartial = async (selector, file) => {
-    const { qs } = Utils;
     try {
-      const base = location.pathname.includes('/tools/') ? '../' : './';
-      const path = file.startsWith('./') ? base + file.substring(2) : file;
+      const path = file.startsWith('./') || file.startsWith('/') ? basePath + file.replace(/^(\.\/|\/)/,'') : file;
       const res = await fetch(path, { cache: 'no-cache' });
       if (!res.ok) return console.warn(`Failed to load ${path}`);
       const html = await res.text();
@@ -37,11 +46,14 @@ const Partials = (() => {
       highlightNav();
     } catch (err) { console.warn(err); }
   };
+
   const highlightNav = () => {
-    const { qs, qsa } = Utils;
     const current = location.pathname.split('/').pop() || 'index.html';
-    qsa('a[data-nav]').forEach(a => a.classList.toggle('active', a.getAttribute('href').split('/').pop() === current));
+    qsa('a[data-nav]').forEach(a => 
+      a.classList.toggle('active', a.getAttribute('href').split('/').pop() === current)
+    );
   };
+
   return { loadPartial, highlightNav };
 })();
 
@@ -71,25 +83,25 @@ const Theme = (() => {
 // Capacity Planner
 // =============================
 const CapacityPlanner = (() => {
-  const { qs, toast } = Utils;
+  const { qs, qsa } = Utils;
   const calc = () => {
-    const st = +qs('st').value||0;
-    const avail = +qs('avail').value||0;
-    const mc = +qs('mc').value||0;
-    const oee = (+qs('oee').value||0)/100;
+    const st = +qs('#st').value||0;
+    const avail = +qs('#avail').value||0;
+    const mc = +qs('#mc').value||0;
+    const oee = (+qs('#oee').value||0)/100;
     const secAvail = avail*60;
     const capPerLine = st>0 ? secAvail/st : 0;
     const cph = st>0 ? (3600/st)*mc*oee : 0;
     const shift = capPerLine*mc*oee;
     const day = shift*2;
-    qs('cph').textContent = Math.floor(cph);
-    qs('shift').textContent = Math.floor(shift);
-    qs('day').textContent = Math.floor(day);
+    qs('#cph').textContent = Math.floor(cph);
+    qs('#shift').textContent = Math.floor(shift);
+    qs('#day').textContent = Math.floor(day);
   };
   const init = () => {
     if (!qs('#cph')) return;
-    qs('calc').addEventListener('click', calc);
-    qs('reset').addEventListener('click', () => qsa('.input').forEach(i=>i.value=''));
+    qs('#calc').addEventListener('click', calc);
+    qs('#reset').addEventListener('click', () => qsa('.input').forEach(i=>i.value=''));
   };
   return { init };
 })();
@@ -98,7 +110,7 @@ const CapacityPlanner = (() => {
 // Schedule & Gantt Module
 // =============================
 const Schedule = (() => {
-  const { qs, qsa, escapeHtml, fmtDate, toast } = Utils;
+  const { qs, qsa, escapeHtml } = Utils;
   const STORAGE = 'pe_tasks_v3';
 
   const loadTasks = () => JSON.parse(localStorage.getItem(STORAGE)||'[]');
@@ -130,7 +142,6 @@ const Schedule = (() => {
     if (!qs('#tbl')) return;
     renderTable();
     // Add, Clear, Filter, Table Actions, CSV, etc. 
-    // สามารถแยกเป็นฟังก์ชันย่อย
   };
   return { init };
 })();
@@ -178,9 +189,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   BackToTop.init();
   CapacityPlanner.init();
   Schedule.init();
+
   await Promise.all([
-    Partials.loadPartial('#site-header','/partials/header.html'),
-    Partials.loadPartial('#site-footer','/partials/footer.html')
+    Partials.loadPartial('#site-header','./partials/header.html'),
+    Partials.loadPartial('#site-footer','./partials/footer.html')
   ]);
+
   setTimeout(() => Partials.highlightNav(), 100);
 });
