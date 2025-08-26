@@ -182,18 +182,24 @@ const Charts = (() => {
 })();
 
 // =============================
-// Init all on DOMContentLoaded
 // =============================
-document.addEventListener('DOMContentLoaded', async () => {
-  Theme.init();
-  BackToTop.init();
-  CapacityPlanner.init();
-  Schedule.init();
+// Load Header & Footer with Fetch
+// =============================
+document.addEventListener('DOMContentLoaded', () => {
+  const loadPartial = async (selector, url) => {
+    try {
+      const res = await fetch(url, { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`Failed to load ${url}`);
+      const html = await res.text();
+      document.querySelector(selector).innerHTML = html;
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
-  await Promise.all([
-    Partials.loadPartial('#site-header','./partials/header.html'),
-    Partials.loadPartial('#site-footer','./partials/footer.html')
-  ]);
+  // ปรับ path ตามตำแหน่งหน้า (root หรือ subfolder)
+  const basePath = location.pathname.includes('/tools/') ? '../' : './';
 
-  setTimeout(() => Partials.highlightNav(), 100);
+  loadPartial('#site-header', `${basePath}partials/header.html`);
+  loadPartial('#site-footer', `${basePath}partials/footer.html`);
 });
