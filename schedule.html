@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PE Ops Studio • Schedule (No-ChartJS)</title>
   <meta name="description" content="ตารางแผนงาน Production Schedule พร้อม Gantt Chart (SVG) และระบบ import/export CSV" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
   <link rel="stylesheet" href="./assets/styles.css" />
   <script defer src="./assets/js/schedule.js"></script>
+  <script defer src="./assets/main.js"></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -39,7 +41,7 @@
         </div>
       </div>
 
-      <div class="mt-3">
+      <div class="section mt-3">
         <button class="btn" id="add">เพิ่ม</button>
         <button class="btn secondary" id="clear">ล้างทั้งหมด</button>
         <button class="btn secondary" id="export">Export CSV</button>
@@ -57,12 +59,22 @@
         <tbody></tbody>
       </table>
 
-      <h2 class="mt-4">Gantt Chart (SVG)</h2>
+      <h2 class="section mt-4">Gantt Chart (SVG)</h2>
       <div id="ganttWrap">
         <svg id="ganttSvg"></svg>
         <div id="tooltip"></div>
       </div>
     </div>
+    <section class="section mt-4">
+      <h2>หมายเหตุ</h2>
+      <ul>
+        <li>ข้อมูลจะถูกเก็บใน LocalStorage ของเบราว์เซอร์ (ถ้าล้าง cache ข้อมูลจะหาย)</li>
+        <li>วันที่เริ่มต้นและสิ้นสุด จะต้องอยู่ในปีเดียวกัน (เช่น 2024-01-01 ถึง 2024-12-31)</li>
+        <li>ไฟล์ CSV ที่ import จะต้องมีหัวคอลัมน์เหมือนกับที่ export ออกมา (Task,Start,End,Status)</li>
+        <li>ถ้า import ไฟล์ที่มีข้อมูลซ้ำกับในตาราง จะเป็นการเพิ่มข้อมูลใหม่ ไม่ใช่การแก้ไขข้อมูลเดิม</li>
+        <li>ถ้าต้องการแก้ไขข้อมูล ให้ลบรายการนั้นออก แล้วเพิ่มใหม่อีกครั้ง</li>
+      </ul>    
+    </section>
   </main>
   <div id="site-footer"></div>
 </body>
