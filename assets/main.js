@@ -179,8 +179,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   CapacityPlanner.init();
   Schedule.init();
   await Promise.all([
-    Partials.loadPartial('#site-header','./partials/header.html'),
-    Partials.loadPartial('#site-footer','./partials/footer.html')
+    Partials.loadPartial('#site-header','/partials/header.html'),
+    Partials.loadPartial('#site-footer','/partials/footer.html')
   ]);
   setTimeout(() => Partials.highlightNav(), 100);
 });
