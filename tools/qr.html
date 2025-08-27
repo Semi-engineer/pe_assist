@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Quality & Reliability</title>
+  <meta name="description" content="คำนวณ Defect Rate, Yield, MTBF และ MTTR" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="../assets/styles.css">
+
+  <!-- JS modules -->
+  <script defer src="../assets/js/partials.js"></script>
+  <script defer src="../assets/js/ui.js"></script>
+  <script defer src="../assets/js/qr.js"></script>
+</head>
+<body>
+  <!-- Header partial -->
+  <div id="site-header"></div>
+
+  <main class="container section">
+    <h1>Quality & Reliability</h1>
+    <p class="lead">คำนวณ Defect Rate (PPM), Yield, MTBF และ MTTR</p>
+
+    <div class="card">
+      <div class="grid grid-4">
+        <div>
+          <label class="label" for="produced">Total Produced (pcs)</label>
+          <input class="input" id="produced" type="number" value="1000" title="Total produced pieces" placeholder="Enter total produced (pcs)" />
+        </div>
+        <div>
+          <label class="label" for="defects">Defect Count (pcs)</label>
+          <input class="input" id="defects" type="number" value="50" title="Defective pieces" placeholder="Enter defect count (pcs)" />
+        </div>
+        <div>
+          <label class="label" for="runtime">Operating Time (hrs)</label>
+          <input class="input" id="runtime" type="number" value="40" title="Total operating hours" placeholder="Enter operating time (hrs)" />
+        </div>
+        <div>
+          <label class="label" for="failures">Failure Events</label>
+          <input class="input" id="failures" type="number" value="2" title="Number of failures" placeholder="Enter number of failures" />
+        </div>
+        <div>
+          <label class="label" for="downtime">Downtime (hrs)</label>
+          <input class="input" id="downtime" type="number" value="5" title="Downtime due to failures (hrs)" placeholder="Enter downtime (hrs)" />
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn" id="calc">Calculate</button>
+        <button class="btn secondary" id="reset">Reset</button>
+      </div>
+
+      <div class="grid grid-4 mt-4">
+        <div class="card"><h3>Defect Rate (PPM)</h3><div id="ppm">-</div></div>
+        <div class="card"><h3>Yield (%)</h3><div id="yield">-</div></div>
+        <div class="card"><h3>MTBF (hrs)</h3><div id="mtbf">-</div></div>
+        <div class="card"><h3>MTTR (hrs)</h3><div id="mttr">-</div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer partial -->
+  <div id="site-footer"></div>
+</body>
+</html>
