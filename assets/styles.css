@@ -148,3 +148,94 @@ body{
 
 /* Helpers */
 .hidden{display:none!important}
+
+
+/* เพิ่มใน assets/styles.css - CSS Variables สำหรับ Gantt Chart */
+
+:root {
+  /* เพิ่ม chart colors */
+  --chart-bg: #0f1420;
+  --chart-border: #2a3244;
+  --chart-grid: rgba(148,163,184,0.15);
+  --chart-axis: #cbd5e1;
+  --chart-label: #e5e7eb;
+  --chart-row-bg: #0c1220;
+  --chart-pending: rgba(239,68,68,0.75);
+  --chart-wip: rgba(234,179,8,0.8);
+  --chart-done: rgba(34,197,94,0.8);
+  --tooltip-bg: #111827;
+  --tooltip-border: #374151;
+  --tooltip-text: #e5e7eb;
+}
+
+:root.light {
+  /* Light theme chart colors */
+  --chart-bg: #ffffff;
+  --chart-border: #e5e7eb;
+  --chart-grid: rgba(0,0,0,0.1);
+  --chart-axis: #374151;
+  --chart-label: #1f2937;
+  --chart-row-bg: #f9fafb;
+  --chart-pending: rgba(239,68,68,0.8);
+  --chart-wip: rgba(234,179,8,0.9);
+  --chart-done: rgba(34,197,94,0.8);
+  --tooltip-bg: #ffffff;
+  --tooltip-border: #d1d5db;
+  --tooltip-text: #1f2937;
+}
+
+/* Update existing chart styles */
+#ganttWrap { 
+  position: relative; 
+  background: var(--chart-bg); 
+  border: 1px solid var(--chart-border); 
+  border-radius: 12px; 
+  overflow: auto; 
+}
+
+.g-grid { 
+  stroke: var(--chart-grid); 
+  stroke-width: 1; 
+}
+
+.g-axis { 
+  fill: var(--chart-axis); 
+  font-size: 12px; 
+}
+
+.g-task.pending { 
+  fill: var(--chart-pending); 
+}
+
+.g-task.wip { 
+  fill: var(--chart-wip); 
+}
+
+.g-task.done { 
+  fill: var(--chart-done); 
+}
+
+.g-label { 
+  fill: var(--chart-label); 
+  font-size: 12px; 
+  dominant-baseline: middle; 
+}
+
+.g-ybg { 
+  fill: var(--chart-row-bg); 
+}
+
+#tooltip {
+  position: absolute; 
+  pointer-events: none; 
+  padding: 8px 10px; 
+  background: var(--tooltip-bg); 
+  border: 1px solid var(--tooltip-border);
+  color: var(--tooltip-text); 
+  border-radius: 10px; 
+  font-size: .85rem; 
+  box-shadow: 0 10px 30px rgba(0,0,0,.35); 
+  display: none; 
+  z-index: 3;
+  max-width: 260px;
+}
