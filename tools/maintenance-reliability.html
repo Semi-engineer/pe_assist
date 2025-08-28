@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Maintenance & Reliability</title>
+  <meta name="description" content="คำนวณ MTBF, MTTR, Availability และ Maintenance Interval" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="../assets/styles.css">
+
+  <!-- JS modules -->
+  <script defer src="../assets/js/partials.js"></script>
+  <script defer src="../assets/js/ui.js"></script>
+  <script defer src="../assets/js/maintenance-reliability.js"></script>
+</head>
+<body>
+  <!-- Header partial -->
+  <div id="site-header"></div>
+
+  <main class="container section">
+    <h1>Maintenance & Reliability</h1>
+    <p class="lead">คำนวณ MTBF, MTTR, Availability และ Maintenance Interval</p>
+
+    <div class="card">
+      <div class="grid grid-3">
+        <div>
+          <label class="label" for="runtime">Operating Time (hrs)</label>
+          <input class="input" id="runtime" type="number" value="500" title="เวลาทำงานรวม (ชั่วโมง)" placeholder="Enter runtime (hrs)" />
+        </div>
+        <div>
+          <label class="label" for="failures">Failure Events</label>
+          <input class="input" id="failures" type="number" value="5" title="จำนวนครั้งที่เสีย" placeholder="Enter failures" />
+        </div>
+        <div>
+          <label class="label" for="downtime">Downtime (hrs)</label>
+          <input class="input" id="downtime" type="number" value="20" title="เวลาหยุดเพราะเสีย" placeholder="Enter downtime (hrs)" />
+        </div>
+        <div>
+          <label class="label" for="interval">Planned Interval (hrs)</label>
+          <input class="input" id="interval" type="number" value="100" title="รอบการบำรุงรักษาที่ตั้งใจ (ชั่วโมง)" placeholder="Enter planned interval (hrs)" />
+        </div>
+        <div>
+          <label class="label" for="confidence">Confidence Level (%)</label>
+          <input class="input" id="confidence" type="number" value="90" title="ระดับความมั่นใจ" placeholder="Enter confidence level (%)" />
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn" id="calc">Calculate</button>
+        <button class="btn secondary" id="reset">Reset</button>
+      </div>
+
+      <div class="grid grid-4 mt-4">
+        <div class="card"><h3>MTBF (hrs)</h3><div id="mtbf">-</div></div>
+        <div class="card"><h3>MTTR (hrs)</h3><div id="mttr">-</div></div>
+        <div class="card"><h3>Availability (%)</h3><div id="availability">-</div></div>
+        <div class="card"><h3>Recommended PM Interval (hrs)</h3><div id="pmInterval">-</div></div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <h2>คำอธิบายตัวแปร</h2>
+      <ul>
+        <li><strong>Operating Time (hrs):</strong> เวลาทำงานรวม</li>
+        <li><strong>Failure Events:</strong> จำนวนครั้งที่เสีย</li>
+        <li><strong>Downtime (hrs):</strong> เวลาหยุดซ่อม</li>
+        <li><strong>Planned Interval (hrs):</strong> รอบเวลาบำรุงรักษาที่วางแผนไว้</li>
+        <li><strong>Confidence Level (%):</strong> ระดับความมั่นใจในการคำนวณรอบ PM</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- Footer partial -->
+  <div id="site-footer"></div>
+</body>
+</html>
