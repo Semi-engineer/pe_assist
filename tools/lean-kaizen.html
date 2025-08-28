@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Lean & Kaizen</title>
+  <meta name="description" content="คำนวณ Waste Time Analyzer และ SMED Setup Time Reduction" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="../assets/styles.css">
+
+  <!-- JS modules -->
+  <script defer src="../assets/js/partials.js"></script>
+  <script defer src="../assets/js/ui.js"></script>
+  <script defer src="../assets/js/lean-kaizen.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main class="container section">
+    <h1>Lean & Kaizen Tools</h1>
+    <p class="lead">คำนวณ Waste Time Analyzer และ SMED Setup Time Reduction</p>
+
+    <!-- Waste Time Analyzer -->
+    <div class="card mt-4">
+      <h2>Waste Time Analyzer</h2>
+      <div class="grid grid-2">
+        <div>
+          <label class="label" for="vaTime">Value Added Time (VA, min)</label>
+          <input class="input" id="vaTime" type="number" value="30" placeholder="Enter VA time" />
+        </div>
+        <div>
+          <label class="label" for="nvaTime">Non Value Added Time (NVA, min)</label>
+          <input class="input" id="nvaTime" type="number" value="20" placeholder="Enter NVA time" />
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn" id="calcWaste">Calculate</button>
+        <button class="btn secondary" id="resetWaste">Reset</button>
+      </div>
+      <div class="grid grid-2 mt-4">
+        <div class="card"><h3>VA %</h3><div id="vaPercent">-</div></div>
+        <div class="card"><h3>NVA %</h3><div id="nvaPercent">-</div></div>
+      </div>
+    </div>
+
+    <!-- SMED Setup Time Reduction -->
+    <div class="card mt-5">
+      <h2>SMED Setup Time Reduction</h2>
+      <div class="grid grid-2">
+        <div>
+          <label class="label" for="setupInitial">Initial Setup Time (min)</label>
+          <input class="input" id="setupInitial" type="number" value="60" placeholder="Enter initial setup time" />
+        </div>
+        <div>
+          <label class="label" for="setupReduced">Reduced Setup Time (min)</label>
+          <input class="input" id="setupReduced" type="number" value="25" placeholder="Enter reduced setup time" />
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn" id="calcSMED">Calculate</button>
+        <button class="btn secondary" id="resetSMED">Reset</button>
+      </div>
+      <div class="grid grid-2 mt-4">
+        <div class="card"><h3>Time Saved (min)</h3><div id="timeSaved">-</div></div>
+        <div class="card"><h3>% Improvement</h3><div id="percentImprovement">-</div></div>
+      </div>
+    </div>
+</div class="mt-5">
+      <h2>คำอธิบายตัวแปร</h2>
+      <ul>
+        <li><strong>Value Added Time (VA, min):</strong> เวลาที่เพิ่มคุณค่าให้กับผลิตภัณฑ์หรือบริการ</li>
+        <li><strong>Non Value Added Time (NVA, min):</strong> เวลาที่ไม่เพิ่มคุณค่าและควรลดหรือกำจัดออก</li>
+        <li><strong>VA %:</strong> สัดส่วนของเวลาที่เพิ่มคุณค่าเมื่อเทียบกับเวลารวม</li>
+        <li><strong>NVA %:</strong> สัดส่วนของเวลาที่ไม่เพิ่มคุณค่าเมื่อเทียบกับเวลารวม</li>
+        <li><strong>Initial Setup Time (min):</strong> เวลาที่ใช้ในการตั้งค่าเครื่องจักรหรือกระบวนการก่อนเริ่มผลิต</li>
+        <li><strong>Reduced Setup Time (min):</strong> เวลาที่ใช้ในการตั้งค่าหลังจากมีการปรับปรุงกระบวนการตามหลัก SMED</li>
+        <li><strong>Time Saved (min):</strong> เวลาที่ประหยัดได้จากการลดเวลาในการตั้งค่า</li>
+        <li><strong>% Improvement:</strong> เปอร์เซ็นต์ของการปรับปรุงเวลาการตั้งค่าหลังจากใช้ SMED</li>
+      </ul>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>

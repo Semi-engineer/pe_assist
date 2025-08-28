@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Inventory & Planning</title>
+  <meta name="description" content="คำนวณ EOQ, Safety Stock, และ Reorder Point" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="../assets/styles.css">
+
+  <!-- JS modules -->
+  <script defer src="../assets/js/partials.js"></script>
+  <script defer src="../assets/js/ui.js"></script>
+  <script defer src="../assets/js/inventory-planning.js"></script>
+</head>
+<body>
+  <!-- Header partial -->
+  <div id="site-header"></div>
+
+  <main class="container section">
+    <h1>Inventory & Planning</h1>
+    <p class="lead">คำนวณ Economic Order Quantity (EOQ), Safety Stock และ Reorder Point</p>
+
+    <div class="card">
+      <div class="grid grid-3">
+        <div>
+          <label class="label" for="demand">Annual Demand (pcs)</label>
+          <input class="input" id="demand" type="number" value="10000" title="ความต้องการรวมต่อปี" placeholder="Enter demand (pcs)" />
+        </div>
+        <div>
+          <label class="label" for="orderCost">Order Cost (per order)</label>
+          <input class="input" id="orderCost" type="number" value="500" title="ต้นทุนต่อการสั่ง 1 ครั้ง" placeholder="Enter order cost" />
+        </div>
+        <div>
+          <label class="label" for="holdingCost">Holding Cost (per unit/year)</label>
+          <input class="input" id="holdingCost" type="number" value="20" title="ต้นทุนการเก็บรักษาต่อหน่วยต่อปี" placeholder="Enter holding cost" />
+        </div>
+        <div>
+          <label class="label" for="leadTime">Lead Time (days)</label>
+          <input class="input" id="leadTime" type="number" value="7" title="เวลารอคอยการส่งมอบ" placeholder="Enter lead time (days)" />
+        </div>
+        <div>
+          <label class="label" for="dailyDemand">Daily Demand (pcs/day)</label>
+          <input class="input" id="dailyDemand" type="number" value="40" title="อัตราการใช้ต่อวัน" placeholder="Enter daily demand" />
+        </div>
+        <div>
+          <label class="label" for="zValue">Service Level (Z-value)</label>
+          <input class="input" id="zValue" type="number" value="1.65" title="ค่ามาตรฐาน Z สำหรับระดับ service (เช่น 95%)" placeholder="Enter Z-value" />
+        </div>
+        <div>
+          <label class="label" for="demandStdDev">Demand Std Dev (pcs/day)</label>
+          <input class="input" id="demandStdDev" type="number" value="10" title="ส่วนเบี่ยงเบนมาตรฐานของความต้องการต่อวัน" placeholder="Enter demand std dev" />
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn" id="calc">Calculate</button>
+        <button class="btn secondary" id="reset">Reset</button>
+      </div>
+
+      <div class="grid grid-3 mt-4">
+        <div class="card"><h3>EOQ (pcs)</h3><div id="eoq">-</div></div>
+        <div class="card"><h3>Safety Stock (pcs)</h3><div id="safetyStock">-</div></div>
+        <div class="card"><h3>Reorder Point (pcs)</h3><div id="rop">-</div></div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <h2>คำอธิบายตัวแปร</h2>
+      <ul>
+        <li><strong>Annual Demand (pcs):</strong> ความต้องการรวมต่อปี</li>
+        <li><strong>Order Cost (per order):</strong> ต้นทุนต่อการสั่งซื้อหนึ่งครั้ง</li>
+        <li><strong>Holding Cost (per unit/year):</strong> ต้นทุนการเก็บรักษาต่อหน่วยต่อปี</li>
+        <li><strong>Lead Time (days):</strong> เวลารอคอยการส่งมอบ</li>
+        <li><strong>Daily Demand (pcs/day):</strong> ความต้องการเฉลี่ยต่อวัน</li>
+        <li><strong>Service Level (Z-value):</strong> ค่า Z ของระดับบริการที่ต้องการ เช่น 1.65 = 95%</li>
+        <li><strong>Demand Std Dev (pcs/day):</strong> ส่วนเบี่ยงเบนมาตรฐานของความต้องการต่อวัน</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- Footer partial -->
+  <div id="site-footer"></div>
+</body>
+</html>
