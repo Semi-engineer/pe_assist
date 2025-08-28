@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Factory Simulation (RTS)</title>
+  <link rel="stylesheet" href="./assets/factory-simulation-2d.css">
+</head>
+<body>
+  <header>
+    <h1>🏭 Factory Simulation — RTS Mode</h1>
+    <span class="pill" id="modePill">Select/Move</span>
+    <div class="row" style="margin-left:auto;gap:12px">
+      <button class="btn" id="pauseBtn">⏸️ Pause</button>
+      <div class="row" style="gap:6px">
+        <label for="speed">Speed</label>
+        <input id="speed" type="range" min="1" max="8" step="1" value="1"/>
+        <span id="speedLabel" class="pill">1x</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <!-- Left: Toolbox -->
+    <section class="panel">
+      <h2>Tools</h2>
+      <div class="toolbox">
+        <button class="btn" data-tool="select" id="tool-select">🖱️ Select/Move</button>
+        <button class="btn" data-tool="connect" id="tool-connect">🔗 Connect</button>
+        <button class="btn" data-tool="delete" id="tool-delete">🗑️ Delete</button>
+        <button class="btn danger" id="resetLayout">♻️ Reset</button>
+      </div>
+      <h2>Add Nodes</h2>
+      <div class="toolbox">
+        <button class="btn" data-add="source">🟩 Source</button>
+        <button class="btn" data-add="buffer">🟦 Buffer</button>
+        <button class="btn" data-add="machine">🟨 Machine</button>
+        <button class="btn" data-add="sink">🟥 Sink</button>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" id="gridToggle" checked> แสดง Grid / Snap</label>
+      </div>
+      <div class="legend">
+        <div class="dot" style="background:#6ee7ff"></div><span>Part</span>
+        <div class="dot" style="background:#f59e0b"></div><span>Busy</span>
+        <div class="dot" style="background:#22c55e"></div><span>Sinked</span>
+      </div>
+      <div class="kpi">
+        <div class="card"><h3>Throughput</h3><div class="val" id="kpiThroughput">0 pcs</div></div>
+        <div class="card"><h3>WIP</h3><div class="val" id="kpiWip">0</div></div>
+        <div class="card"><h3>Bottleneck</h3><div class="val" id="kpiBottle">-</div></div>
+      </div>
+    </section>
+
+    <!-- Center: Canvas -->
+    <section class="panel canvasWrap">
+      <h2>Simulation Space</h2>
+      <canvas id="view" width="1100" height="620"></canvas>
+      <canvas id="mini" class="mini" width="200" height="120" title="Mini-map"></canvas>
+      <div class="statusbar">
+        <div>Nodes: <span id="statNodes">0</span> • Edges: <span id="statEdges">0</span> • Parts: <span id="statParts">0</span></div>
+        <div>Tip: ใช้โหมด 🔗 Connect แล้วคลิกต้นทาง → ปลายทาง เพื่อทำ Flow</div>
+      </div>
+    </section>
+
+    <!-- Right: Inspector -->
+    <aside class="panel">
+      <h2>Inspector</h2>
+      <div class="inspect" id="inspector">
+        <div class="hint">เลือก Node หรือ Part เพื่อดู/แก้ไขค่าได้</div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="./assets/js/factory-simulation-2d.js"></script>
+</body>
+</html>

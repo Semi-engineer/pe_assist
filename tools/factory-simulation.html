@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PE Ops Studio • Factory Simulation</title>
+  <meta name="description" content="จำลองการผลิตในโรงงานเพื่อดู Throughput, Utilization และ Bottleneck" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="../assets/styles.css">
+
+  <!-- JS modules -->
+  <script defer src="../assets/js/partials.js"></script>
+  <script defer src="../assets/js/ui.js"></script>
+  <script defer src="../assets/js/factory-simulation.js"></script>
+</head>
+<body>
+  <!-- Header partial -->
+  <div id="site-header"></div>
+
+  <main class="container section">
+    <h1>Factory Simulation</h1>
+    <p class="lead">ปรับพารามิเตอร์ของโรงงาน แล้วดูผลลัพธ์การผลิต</p>
+
+    <div class="card">
+      <div class="grid grid-4">
+        <div>
+          <label class="label" for="machines">Machines</label>
+          <input class="input" id="machines" type="number" value="3" title="จำนวนเครื่องจักร" placeholder="Enter machines" />
+        </div>
+        <div>
+          <label class="label" for="workers">Workers</label>
+          <input class="input" id="workers" type="number" value="5" title="จำนวนแรงงาน" placeholder="Enter workers" />
+        </div>
+        <div>
+          <label class="label" for="cycleTime">Cycle Time (sec)</label>
+          <input class="input" id="cycleTime" type="number" value="60" title="เวลาต่อชิ้น" placeholder="Enter cycle time (sec)" />
+        </div>
+        <div>
+          <label class="label" for="workTime">Available Time (min)</label>
+          <input class="input" id="workTime" type="number" value="480" title="เวลาทำงานต่อกะ" placeholder="Enter available time (min)" />
+        </div>
+        <div>
+          <label class="label" for="demand">Customer Demand (pcs)</label>
+          <input class="input" id="demand" type="number" value="400" title="ความต้องการลูกค้า" placeholder="Enter demand (pcs)" />
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn" id="simulate">Simulate</button>
+        <button class="btn secondary" id="reset">Reset</button>
+      </div>
+
+      <div class="grid grid-4 mt-4">
+        <div class="card"><h3>Throughput (pcs)</h3><div id="throughput">-</div></div>
+        <div class="card"><h3>Utilization (%)</h3><div id="utilization">-</div></div>
+        <div class="card"><h3>Bottleneck</h3><div id="bottleneck">-</div></div>
+        <div class="card"><h3>Demand Fulfillment (%)</h3><div id="fulfillment">-</div></div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <h2>คำอธิบายตัวแปร</h2>
+      <ul>
+        <li><strong>Machines:</strong> จำนวนเครื่องจักร</li>
+        <li><strong>Workers:</strong> จำนวนแรงงาน</li>
+        <li><strong>Cycle Time (sec):</strong> เวลาผลิตต่อชิ้น</li>
+        <li><strong>Available Time (min):</strong> เวลาทำงานต่อกะ</li>
+        <li><strong>Customer Demand (pcs):</strong> ความต้องการของลูกค้า</li>
+        <li><strong>Throughput (pcs):</strong> จำนวนชิ้นงานที่ผลิตได้ในเวลาที่กำหนด</li>
+        <li><strong>Utilization (%):</strong> สัดส่วนการใช้เครื่องจักรและแรงงานที่มีอยู่</li>
+        <li><strong>Bottleneck:</strong> ส่วนที่เป็นคอขวดของกระบวนการผลิต</li>
+        <li><strong>Demand Fulfillment (%):</strong> สัดส่วนความสามารถในการตอบสนองความต้องการของลูกค้า</li> 
+      </ul>
+    </div>
+  </main>
+
+  <!-- Footer partial -->
+  <div id="site-footer"></div>
+</body>
+</html>

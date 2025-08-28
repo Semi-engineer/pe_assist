@@ -1,0 +1,269 @@
+/* Factory Simulation Styles */
+
+:root {
+  --bg: #0f1115;
+  --panel: #151923;
+  --muted: #2a3040;
+  --accent: #6ee7ff;
+  --text: #e6edf3;
+  --good: #22c55e;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  background: #0b0e13;
+  border-bottom: 1px solid var(--muted);
+}
+
+header h1 {
+  font-size: 16px;
+  margin: 0;
+  opacity: .95;
+}
+
+/* Main Layout */
+.wrap {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 10px;
+  padding: 10px;
+  height: calc(100vh - 54px);
+}
+
+/* Panels */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--muted);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.panel h2 {
+  margin: 0;
+  padding: .75rem 1rem;
+  font-size: 13px;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--muted);
+  opacity: .9;
+}
+
+/* Toolbox */
+.toolbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+}
+
+/* Buttons */
+.btn {
+  border: 1px solid var(--muted);
+  background: #111522;
+  color: var(--text);
+  padding: .55rem .65rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: #1a1e2e;
+}
+
+.btn.active {
+  outline: 2px solid var(--accent);
+}
+
+.btn.danger {
+  border-color: #3a1f23;
+  color: #ffd5d5;
+  background: #231114;
+}
+
+.btn.danger:hover {
+  background: #2a1419;
+}
+
+/* Layout Helpers */
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Form Fields */
+.field {
+  display: grid;
+  gap: 6px;
+  margin: 10px;
+}
+
+.field label {
+  font-size: 12px;
+  opacity: .8;
+}
+
+.field input[type="number"],
+.field input[type="range"],
+.field input[type="text"] {
+  width: 100%;
+  background: #0f1422;
+  border: 1px solid var(--muted);
+  color: var(--text);
+  border-radius: 10px;
+  padding: .45rem .6rem;
+  transition: border-color 0.2s ease;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Canvas Area */
+.canvasWrap {
+  position: relative;
+}
+
+canvas {
+  display: block;
+  background: #0b0f18;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.mini {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid var(--muted);
+  background: #0b0f18;
+  border-radius: 8px;
+}
+
+/* Status Bar */
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: .5rem 1rem;
+  border-top: 1px solid var(--muted);
+  background: #0c101a;
+  font-size: 12px;
+  opacity: .8;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border-top: 1px solid var(--muted);
+  font-size: 12px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Pills */
+.pill {
+  padding: .2rem .5rem;
+  border-radius: 999px;
+  border: 1px solid var(--muted);
+  font-size: 12px;
+  background: var(--panel);
+}
+
+/* KPI Cards */
+.kpi {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px;
+}
+
+.kpi .card {
+  border: 1px solid var(--muted);
+  background: #101625;
+  border-radius: 10px;
+  padding: .6rem .7rem;
+  text-align: center;
+}
+
+.kpi .card h3 {
+  margin: 0 0 .3rem 0;
+  font-size: 12px;
+  opacity: .8;
+  font-weight: 500;
+}
+
+.kpi .card .val {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Inspector */
+.inspect {
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.hint {
+  opacity: .7;
+  font-size: 12px;
+  padding: 0 10px 10px;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Grid Toggle */
+#gridToggle {
+  margin-left: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .wrap {
+    grid-template-columns: 260px 1fr 300px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .wrap {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+  
+  .panel:first-child,
+  .panel:last-child {
+    order: 2;
+  }
+  
+  .canvasWrap {
+    order: 1;
+  }
+}
