@@ -5,230 +5,285 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PE Ops Studio • Factory Simulation (Enhanced)</title>
   <link rel="stylesheet" href="./assets/factory-simulation-2d.css" />
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <script src="../assets/main.js" defer></script>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <script src="./assets/main.js" defer></script>
+  <script defer src="./assets/js/ui.js"></script>
 </head>
 <body>
   <div id="site-header"></div>
 
-  <main class="container section">
-    <h1>🏭 Factory Simulation — Enhanced with Production Parameters</h1>
-    <span class="pill" id="modePill">Select/Move</span>
-    <div class="row row-header-controls">
-      <button class="btn" id="pauseBtn" type="button">⏸️ Pause</button>
-      <div class="row row-speed-controls">
-        <label for="speed">Speed</label>
-        <input id="speed" type="range" min="1" max="8" step="1" value="1"/>
-        <span id="speedLabel" class="pill">1x</span>
+  <!-- CAD-style Layout -->
+  <div class="cad-layout">
+    
+    <!-- Header Bar -->
+    <div class="cad-header">
+      <h1 style="margin: 0; font-size: 1.2rem;">🏭 Factory Simulation — Enhanced</h1>
+      <div class="mode-indicator" id="modePill">Select/Move</div>
+    </div>
+    
+    <!-- Toolbar -->
+    <div class="cad-toolbar">
+      <div class="toolbar-group">
+        <button class="btn" id="pauseBtn" type="button">⏸️</button>
+        <button class="btn" id="resetLayout" type="button">♻️</button>
+      </div>
+      <div class="toolbar-group">
+        <label for="speed" style="color: white; font-size: 0.85rem;">Speed:</label>
+        <input id="speed" type="range" min="1" max="8" step="1" value="1" style="width: 100px;"/>
+        <span id="speedLabel" class="pill" style="background: #555; color: white;">1x</span>
+      </div>
+      <div class="toolbar-group">
+        <label style="color: white; font-size: 0.85rem;">
+          <input type="checkbox" id="gridToggle" checked> Grid
+        </label>
       </div>
     </div>
-
-  <div class="wrap">
-    <section class="panel">
-      <h2>Tools</h2>
-      <div class="toolbox">
-        <button class="btn active" data-tool="select" type="button">🖱️ Select/Move</button>
-        <button class="btn" data-tool="connect" type="button">🔗 Connect</button>
-        <button class="btn" data-tool="delete" type="button">🗑️ Delete</button>
-        <button class="btn danger" id="resetLayout" type="button">♻️ Reset</button>
-      </div>
-      <h2>Add Nodes</h2>
-      <div class="toolbox">
-        <button class="btn" data-add="source" type="button">🟩 Source</button>
-        <button class="btn" data-add="buffer" type="button">🟦 Buffer</button>
-        <button class="btn" data-add="machine" type="button">🟨 Machine</button>
-        <button class="btn" data-add="sink" type="button">🟥 Sink</button>
-      </div>
-      <div class="field">
-        <label><input type="checkbox" id="gridToggle" checked> แสดง Grid / Snap</label>
-      </div>
-      <div class="legend">
-        <div class="dot dot-part"></div><span>Part</span>
-        <div class="dot dot-busy"></div><span>Busy</span>
-        <div class="dot dot-sinked"></div><span>Sinked</span>
-      </div>
-      <div class="kpi">
-        <div class="card"><h3>Throughput</h3><div class="val" id="kpiThroughput">0 pcs</div></div>
-        <div class="card"><h3>WIP</h3><div class="val" id="kpiWip">0</div></div>
-        <div class="card"><h3>Efficiency</h3><div class="val" id="kpiEfficiency">0%</div></div>
-      </div>
-      <div class="kpi">
-        <div class="card"><h3>Total Cost</h3><div class="val" id="kpiCost">0 ฿</div></div>
-        <div class="card"><h3>Cost/Unit</h3><div class="val" id="kpiUnitCost">0 ฿</div></div>
-        <div class="card"><h3>Bottleneck</h3><div class="val" id="kpiBottle">-</div></div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Production Parameters</h2>
-      <div class="panel-content">
+    
+    <!-- Main Area -->
+    <div class="cad-main">
+      
+      <!-- Left Toolbox -->
+      <div class="cad-toolbox">
+        <div class="toolbox-section">
+          <h3>🛠️ Tools</h3>
+          <div class="tool-grid">
+            <button class="btn active" data-tool="select" type="button" style="font-size: 0.8rem;">🖱️ Select</button>
+            <button class="btn" data-tool="connect" type="button" style="font-size: 0.8rem;">🔗 Connect</button>
+            <button class="btn" data-tool="delete" type="button" style="font-size: 0.8rem;">🗑️ Delete</button>
+          </div>
+        </div>
         
-        <div class="param-section">
-          <h3>📊 Global Settings</h3>
-          <div class="param-grid">
-            <div class="param-row">
+        <div class="toolbox-section">
+          <h3>➕ Add Nodes</h3>
+          <div class="tool-grid">
+            <button class="btn" data-add="source" type="button" style="font-size: 0.8rem;">🟩 Source</button>
+            <button class="btn" data-add="buffer" type="button" style="font-size: 0.8rem;">🟦 Buffer</button>
+            <button class="btn" data-add="machine" type="button" style="font-size: 0.8rem;">🟨 Machine</button>
+            <button class="btn" data-add="sink" type="button" style="font-size: 0.8rem;">🟥 Sink</button>
+          </div>
+        </div>
+        
+        <div class="toolbox-section">
+          <h3>📊 Legend</h3>
+          <div class="legend" style="font-size: 0.8rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <div class="dot dot-part"></div><span>Part</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <div class="dot dot-busy"></div><span>Busy</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div class="dot dot-sinked"></div><span>Sinked</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbox-section">
+          <h3>📈 KPIs</h3>
+          <div class="compact-kpi">
+            <div class="card"><h3>Throughput</h3><div class="val" id="kpiThroughput">0 pcs</div></div>
+            <div class="card"><h3>WIP</h3><div class="val" id="kpiWip">0</div></div>
+            <div class="card"><h3>Efficiency</h3><div class="val" id="kpiEfficiency">0%</div></div>
+            <div class="card"><h3>Total Cost</h3><div class="val" id="kpiCost">0 ฿</div></div>
+            <div class="card"><h3>Cost/Unit</h3><div class="val" id="kpiUnitCost">0 ฿</div></div>
+            <div class="card"><h3>Bottleneck</h3><div class="val" id="kpiBottle">-</div></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Central Canvas Area -->
+      <div class="cad-canvas-area">
+        <div class="panel canvasWrap" style="flex: 1; margin: 0; border: none; background: transparent;">
+          <canvas id="view" style="width: 100%; height: 100%;"></canvas>
+          <canvas id="mini" class="mini" width="180" height="110" title="Mini-map" style="position: absolute; top: 10px; right: 10px; border: 2px solid #333;"></canvas>
+          <button class="btn reset-view" id="resetViewBtn" style="position: absolute; bottom: 10px; right: 10px;">Reset View</button>
+        </div>
+      </div>
+      
+      <!-- Right Properties Panel -->
+      <div class="cad-properties">
+        
+        <!-- Inspector -->
+        <div class="properties-section">
+          <div class="properties-header">🔍 Inspector</div>
+          <div class="properties-content">
+            <div class="inspect" id="inspector">
+              <div class="hint" style="font-size: 0.85rem; color: #666;">เลือก Node หรือ Part เพื่อดู/แก้ไขค่าได้</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Settings -->
+        <div class="properties-section">
+          <div class="properties-header">📊 Global Settings</div>
+          <div class="properties-content">
+            <div class="param-compact">
               <span class="param-label">Simulation Hours</span>
-              <input type="number" class="param-input" id="simHours" value="8" min="1" max="24" title="Simulation Hours" placeholder="Simulation Hours">
+              <input type="number" class="param-input" id="simHours" value="8" min="1" max="24">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Target Production</span>
-              <input type="number" class="param-input" id="targetProd" value="100" min="1" title="Target Production" placeholder="Target Production">
+              <input type="number" class="param-input" id="targetProd" value="100" min="1">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Quality Target (%)</span>
-              <input type="number" class="param-input" id="qualityTarget" value="95" min="50" max="100" title="Quality Target (%)" placeholder="Quality Target (%)">
+              <input type="number" class="param-input" id="qualityTarget" value="95" min="50" max="100">
             </div>
           </div>
         </div>
 
-        <div class="param-section">
-          <h3>💰 Material & Cost</h3>
-          <div class="param-grid">
-            <div class="param-row">
+        <!-- Material & Cost -->
+        <div class="properties-section">
+          <div class="properties-header">💰 Material & Cost</div>
+          <div class="properties-content">
+            <div class="param-compact">
               <span class="param-label">Raw Material (฿/unit)</span>
-              <input type="number" class="param-input" id="materialCost" value="15.50" step="0.01" min="0" title="Raw Material (฿/unit)" placeholder="Raw Material (฿/unit)">
+              <input type="number" class="param-input" id="materialCost" value="15.50" step="0.01" min="0">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Setup Cost (฿/batch)</span>
-              <input type="number" class="param-input" id="setupCost" value="500" min="0" title="Setup Cost (฿/batch)" placeholder="Setup Cost (฿/batch)">
+              <input type="number" class="param-input" id="setupCost" value="500" min="0">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Inventory Cost (%/day)</span>
-              <input type="number" class="param-input" id="inventoryCost" value="0.5" step="0.1" min="0" title="Inventory Cost (%/day)" placeholder="Inventory Cost (%/day)">
+              <input type="number" class="param-input" id="inventoryCost" value="0.5" step="0.1" min="0">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Defect Cost (฿/unit)</span>
-              <input type="number" class="param-input" id="defectCost" value="25" min="0" title="Defect Cost (฿/unit)" placeholder="Defect Cost (฿/unit)">
+              <input type="number" class="param-input" id="defectCost" value="25" min="0">
             </div>
           </div>
         </div>
 
-        <div class="param-section">
-          <h3>👥 Labor & Resources</h3>
-          <div class="param-grid">
-            <div class="param-row">
+        <!-- Labor & Resources -->
+        <div class="properties-section">
+          <div class="properties-header">👥 Labor & Resources</div>
+          <div class="properties-content">
+            <div class="param-compact">
               <span class="param-label">Labor Rate (฿/hour)</span>
-              <input type="number" class="param-input" id="laborRate" value="120" min="0" title="Labor Rate (฿/hour)" placeholder="Labor Rate (฿/hour)">
+              <input type="number" class="param-input" id="laborRate" value="120" min="0">
             </div>
-            <div class="param-row">
-              <span class="param-label">Operators per Machine</span>
-              <input type="number" class="param-input" id="operatorsPerMachine" value="1" min="1" max="5" title="Operators per Machine" placeholder="Operators per Machine">
+            <div class="param-compact">
+              <span class="param-label">Operators/Machine</span>
+              <input type="number" class="param-input" id="operatorsPerMachine" value="1" min="1" max="5">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Overhead Rate (฿/hour)</span>
-              <input type="number" class="param-input" id="overheadRate" value="80" min="0" title="Overhead Rate (฿/hour)" placeholder="Overhead Rate (฿/hour)">
+              <input type="number" class="param-input" id="overheadRate" value="80" min="0">
             </div>
           </div>
         </div>
 
-        <div class="param-section">
-          <h3>⚙️ Machine Parameters</h3>
-          <div class="param-grid">
-            <div class="param-row">
+        <!-- Machine Parameters -->
+        <div class="properties-section">
+          <div class="properties-header">⚙️ Machine Parameters</div>
+          <div class="properties-content">
+            <div class="param-compact">
               <span class="param-label">Machine Cost (฿/hour)</span>
-              <input type="number" class="param-input" id="machineCost" value="200" min="0" title="Machine Cost (฿/hour)" placeholder="Machine Cost (฿/hour)">
+              <input type="number" class="param-input" id="machineCost" value="200" min="0">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Maintenance Rate (%)</span>
-              <input type="number" class="param-input" id="maintenanceRate" value="2" step="0.1" min="0" max="10" title="Maintenance Rate (%)" placeholder="Maintenance Rate (%)">
+              <input type="number" class="param-input" id="maintenanceRate" value="2" step="0.1" min="0" max="10">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Energy Cost (฿/hour)</span>
-              <input type="number" class="param-input" id="energyCost" value="45" min="0" title="Energy Cost (฿/hour)" placeholder="Energy Cost (฿/hour)">
+              <input type="number" class="param-input" id="energyCost" value="45" min="0">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Utilization Target (%)</span>
-              <input type="number" class="param-input" id="utilizationTarget" value="85" min="50" max="100" title="Utilization Target (%)" placeholder="Utilization Target (%)">
+              <input type="number" class="param-input" id="utilizationTarget" value="85" min="50" max="100">
             </div>
           </div>
         </div>
 
-        <div class="param-section">
-          <h3>✅ Quality & Reliability</h3>
-          <div class="param-grid">
-            <div class="param-row">
+        <!-- Quality & Reliability -->
+        <div class="properties-section">
+          <div class="properties-header">✅ Quality & Reliability</div>
+          <div class="properties-content">
+            <div class="param-compact">
               <span class="param-label">Defect Rate (%)</span>
-              <input type="number" class="param-input" id="defectRate" value="2.5" step="0.1" min="0" max="20" title="Defect Rate (%)" placeholder="Defect Rate (%)">
+              <input type="number" class="param-input" id="defectRate" value="2.5" step="0.1" min="0" max="20">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Rework Rate (%)</span>
-              <input type="number" class="param-input" id="reworkRate" value="1.2" step="0.1" min="0" max="10" title="Rework Rate (%)" placeholder="Rework Rate (%)">
+              <input type="number" class="param-input" id="reworkRate" value="1.2" step="0.1" min="0" max="10">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Machine Downtime (%)</span>
-              <input type="number" class="param-input" id="downtimeRate" value="5" step="0.1" min="0" max="20" title="Machine Downtime (%)" placeholder="Machine Downtime (%)">
+              <input type="number" class="param-input" id="downtimeRate" value="5" step="0.1" min="0" max="20">
             </div>
           </div>
         </div>
 
-        <div class="param-section">
-          <h3>📦 Buffer & Flow</h3>
-          <div class="param-grid">
-            <div class="param-row">
-              <span class="param-label">Buffer Capacity (default)</span>
-              <input type="number" class="param-input" id="bufferCapacity" value="20" min="1" max="1000" title="Buffer Capacity (default)" placeholder="Buffer Capacity (default)">
+        <!-- Buffer & Flow -->
+        <div class="properties-section">
+          <div class="properties-header">📦 Buffer & Flow</div>
+          <div class="properties-content">
+            <div class="param-compact">
+              <span class="param-label">Buffer Capacity</span>
+              <input type="number" class="param-input" id="bufferCapacity" value="20" min="1" max="1000">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Transport Speed (m/min)</span>
-              <input type="number" class="param-input" id="transportSpeed" value="30" min="1" max="200" title="Transport Speed (m/min)" placeholder="Transport Speed (m/min)">
+              <input type="number" class="param-input" id="transportSpeed" value="30" min="1" max="200">
             </div>
-            <div class="param-row">
+            <div class="param-compact">
               <span class="param-label">Batch Size</span>
-              <input type="number" class="param-input" id="batchSize" value="10" min="1" max="100" title="Batch Size" placeholder="Batch Size">
+              <input type="number" class="param-input" id="batchSize" value="10" min="1" max="100">
             </div>
           </div>
         </div>
 
-        <div class="field">
-          <button class="btn primary" id="applyParams">🔄 Apply Parameters</button>
+        <!-- Apply Button -->
+        <button class="btn primary" id="applyParams" style="width: 100%; margin: 1rem 0;">🔄 Apply Parameters</button>
+
+        <!-- Cost Breakdown -->
+        <div class="properties-section">
+          <div class="properties-header">💰 Cost Breakdown</div>
+          <div class="properties-content">
+            <div style="font-size: 0.85rem;">
+              <div class="cost-row" style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span>Material:</span>
+                <span id="costMaterial">0 ฿</span>
+              </div>
+              <div class="cost-row" style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span>Labor:</span>
+                <span id="costLabor">0 ฿</span>
+              </div>
+              <div class="cost-row" style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span>Machine:</span>
+                <span id="costMachine">0 ฿</span>
+              </div>
+              <div class="cost-row" style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span>Overhead:</span>
+                <span id="costOverhead">0 ฿</span>
+              </div>
+              <hr style="margin: 0.5rem 0;">
+              <div class="cost-row cost-total" style="display: flex; justify-content: space-between; font-weight: bold;">
+                <span>Total:</span>
+                <span id="costTotal">0 ฿</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="cost-summary">
-          <h3 class="cost-breakdown-title">💰 Cost Breakdown</h3>
-          <div class="cost-row">
-            <span>Material Cost:</span>
-            <span id="costMaterial">0 ฿</span>
-          </div>
-          <div class="cost-row">
-            <span>Labor Cost:</span>
-            <span id="costLabor">0 ฿</span>
-          </div>
-          <div class="cost-row">
-            <span>Machine Cost:</span>
-            <span id="costMachine">0 ฿</span>
-          </div>
-          <div class="cost-row">
-            <span>Overhead:</span>
-            <span id="costOverhead">0 ฿</span>
-          </div>
-          <div class="cost-row cost-total">
-            <span>Total Cost:</span>
-            <span id="costTotal">0 ฿</span>
-          </div>
-        </div>
-
       </div>
-    </section>
-
-    <section class="panel canvasWrap">
-      <h2>Simulation Space</h2>
-      <canvas id="view"></canvas>
-      <canvas id="mini" class="mini" width="180" height="110" title="Mini-map"></canvas>
-      <div class="statusbar">
-        <div>Nodes: <span id="statNodes">0</span> • Edges: <span id="statEdges">0</span> • Parts: <span id="statParts">0</span></div>
-        <button class="btn reset-view" id="resetViewBtn">Reset View</button>
-        <div>Tip: ใช้โหมด 🔗 Connect แล้วคลิกต้นทาง → ปลายทาง เพื่อทำ Flow</div>
+      
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="cad-status-bar">
+      <div>
+        Nodes: <span id="statNodes">0</span> • 
+        Edges: <span id="statEdges">0</span> • 
+        Parts: <span id="statParts">0</span>
       </div>
-    </section>
-
-    <aside class="panel">
-      <h2>Inspector</h2>
-      <div class="inspect" id="inspector">
-        <div class="hint">เลือก Node หรือ Part เพื่อดู/แก้ไขค่าได้</div>
-      </div>
-    </aside>
+      <div>Tip: ใช้โหมด 🔗 Connect แล้วคลิกต้นทาง → ปลายทาง เพื่อทำ Flow</div>
+    </div>
+    
   </div>
-  </main>
+
   <script src="./assets/js/factory-simulation-2d.js"></script>
   <div id="site-footer"></div>
 </body>
