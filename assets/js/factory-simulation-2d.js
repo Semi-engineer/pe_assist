@@ -95,7 +95,7 @@ let initialPinchDistance = 0;
 let lastPinchScale = 1;
 
 function zoom(delta, clientX, clientY){
-  const newScale = clamp(transform.scale + delta * 0.001, transform.minScale, transform.maxScale);
+  const newScale = clamp(transform.scale + delta * 0.100, transform.minScale, transform.maxScale);
   const factor = newScale / transform.scale;
   transform.scale = newScale;
   
