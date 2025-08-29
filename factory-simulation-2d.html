@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PE Ops Studio • Factory Simulation (RTS)</title>
-  <link rel="stylesheet" href="./assets/factory-simulation-2d.css">
+  <title>PE Ops Studio • Factory Simulation (Enhanced)</title>
+  <link rel="stylesheet" href="./assets/factory-simulation-2d.css" />
 </head>
 <body>
   <header>
-    <h1>🏭 Factory Simulation — RTS Mode</h1>
+    <h1>🏭 Factory Simulation — Enhanced with Production Parameters</h1>
     <span class="pill" id="modePill">Select/Move</span>
     <div class="row" style="margin-left:auto;gap:12px">
       <button class="btn" id="pauseBtn">⏸️ Pause</button>
@@ -21,13 +21,12 @@
   </header>
 
   <div class="wrap">
-    <!-- Left: Toolbox -->
     <section class="panel">
       <h2>Tools</h2>
       <div class="toolbox">
-        <button class="btn" data-tool="select" id="tool-select">🖱️ Select/Move</button>
-        <button class="btn" data-tool="connect" id="tool-connect">🔗 Connect</button>
-        <button class="btn" data-tool="delete" id="tool-delete">🗑️ Delete</button>
+        <button class="btn active" data-tool="select">🖱️ Select/Move</button>
+        <button class="btn" data-tool="connect">🔗 Connect</button>
+        <button class="btn" data-tool="delete">🗑️ Delete</button>
         <button class="btn danger" id="resetLayout">♻️ Reset</button>
       </div>
       <h2>Add Nodes</h2>
@@ -48,22 +47,177 @@
       <div class="kpi">
         <div class="card"><h3>Throughput</h3><div class="val" id="kpiThroughput">0 pcs</div></div>
         <div class="card"><h3>WIP</h3><div class="val" id="kpiWip">0</div></div>
+        <div class="card"><h3>Efficiency</h3><div class="val" id="kpiEfficiency">0%</div></div>
+      </div>
+      <div class="kpi">
+        <div class="card"><h3>Total Cost</h3><div class="val" id="kpiCost">0 ฿</div></div>
+        <div class="card"><h3>Cost/Unit</h3><div class="val" id="kpiUnitCost">0 ฿</div></div>
         <div class="card"><h3>Bottleneck</h3><div class="val" id="kpiBottle">-</div></div>
       </div>
     </section>
 
-    <!-- Center: Canvas -->
+    <section class="panel">
+      <h2>Production Parameters</h2>
+      <div class="panel-content">
+        
+        <div class="param-section">
+          <h3>📊 Global Settings</h3>
+          <div class="param-grid">
+            <div class="param-row">
+              <span class="param-label">Simulation Hours</span>
+              <input type="number" class="param-input" id="simHours" value="8" min="1" max="24">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Target Production</span>
+              <input type="number" class="param-input" id="targetProd" value="100" min="1">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Quality Target (%)</span>
+              <input type="number" class="param-input" id="qualityTarget" value="95" min="50" max="100">
+            </div>
+          </div>
+        </div>
+
+        <div class="param-section">
+          <h3>💰 Material & Cost</h3>
+          <div class="param-grid">
+            <div class="param-row">
+              <span class="param-label">Raw Material (฿/unit)</span>
+              <input type="number" class="param-input" id="materialCost" value="15.50" step="0.01" min="0">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Setup Cost (฿/batch)</span>
+              <input type="number" class="param-input" id="setupCost" value="500" min="0">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Inventory Cost (%/day)</span>
+              <input type="number" class="param-input" id="inventoryCost" value="0.5" step="0.1" min="0">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Defect Cost (฿/unit)</span>
+              <input type="number" class="param-input" id="defectCost" value="25" min="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="param-section">
+          <h3>👥 Labor & Resources</h3>
+          <div class="param-grid">
+            <div class="param-row">
+              <span class="param-label">Labor Rate (฿/hour)</span>
+              <input type="number" class="param-input" id="laborRate" value="120" min="0">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Operators per Machine</span>
+              <input type="number" class="param-input" id="operatorsPerMachine" value="1" min="1" max="5">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Overhead Rate (฿/hour)</span>
+              <input type="number" class="param-input" id="overheadRate" value="80" min="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="param-section">
+          <h3>⚙️ Machine Parameters</h3>
+          <div class="param-grid">
+            <div class="param-row">
+              <span class="param-label">Machine Cost (฿/hour)</span>
+              <input type="number" class="param-input" id="machineCost" value="200" min="0">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Maintenance Rate (%)</span>
+              <input type="number" class="param-input" id="maintenanceRate" value="2" step="0.1" min="0" max="10">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Energy Cost (฿/hour)</span>
+              <input type="number" class="param-input" id="energyCost" value="45" min="0">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Utilization Target (%)</span>
+              <input type="number" class="param-input" id="utilizationTarget" value="85" min="50" max="100">
+            </div>
+          </div>
+        </div>
+
+        <div class="param-section">
+          <h3>✅ Quality & Reliability</h3>
+          <div class="param-grid">
+            <div class="param-row">
+              <span class="param-label">Defect Rate (%)</span>
+              <input type="number" class="param-input" id="defectRate" value="2.5" step="0.1" min="0" max="20">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Rework Rate (%)</span>
+              <input type="number" class="param-input" id="reworkRate" value="1.2" step="0.1" min="0" max="10">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Machine Downtime (%)</span>
+              <input type="number" class="param-input" id="downtimeRate" value="5" step="0.1" min="0" max="20">
+            </div>
+          </div>
+        </div>
+
+        <div class="param-section">
+          <h3>📦 Buffer & Flow</h3>
+          <div class="param-grid">
+            <div class="param-row">
+              <span class="param-label">Buffer Capacity (default)</span>
+              <input type="number" class="param-input" id="bufferCapacity" value="20" min="1" max="1000">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Transport Speed (m/min)</span>
+              <input type="number" class="param-input" id="transportSpeed" value="30" min="1" max="200">
+            </div>
+            <div class="param-row">
+              <span class="param-label">Batch Size</span>
+              <input type="number" class="param-input" id="batchSize" value="10" min="1" max="100">
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <button class="btn primary" id="applyParams">🔄 Apply Parameters</button>
+        </div>
+
+        <div class="cost-summary">
+          <h3 style="margin: 0 0 8px 0; font-size: 13px;">💰 Cost Breakdown</h3>
+          <div class="cost-row">
+            <span>Material Cost:</span>
+            <span id="costMaterial">0 ฿</span>
+          </div>
+          <div class="cost-row">
+            <span>Labor Cost:</span>
+            <span id="costLabor">0 ฿</span>
+          </div>
+          <div class="cost-row">
+            <span>Machine Cost:</span>
+            <span id="costMachine">0 ฿</span>
+          </div>
+          <div class="cost-row">
+            <span>Overhead:</span>
+            <span id="costOverhead">0 ฿</span>
+          </div>
+          <div class="cost-row cost-total">
+            <span>Total Cost:</span>
+            <span id="costTotal">0 ฿</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
     <section class="panel canvasWrap">
       <h2>Simulation Space</h2>
-      <canvas id="view" width="1100" height="620"></canvas>
-      <canvas id="mini" class="mini" width="200" height="120" title="Mini-map"></canvas>
+      <canvas id="view"></canvas>
+      <canvas id="mini" class="mini" width="180" height="110" title="Mini-map"></canvas>
       <div class="statusbar">
         <div>Nodes: <span id="statNodes">0</span> • Edges: <span id="statEdges">0</span> • Parts: <span id="statParts">0</span></div>
+        <button class="btn reset-view" id="resetViewBtn">Reset View</button>
         <div>Tip: ใช้โหมด 🔗 Connect แล้วคลิกต้นทาง → ปลายทาง เพื่อทำ Flow</div>
       </div>
     </section>
 
-    <!-- Right: Inspector -->
     <aside class="panel">
       <h2>Inspector</h2>
       <div class="inspect" id="inspector">
