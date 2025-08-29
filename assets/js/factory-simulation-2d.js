@@ -215,6 +215,11 @@ function spawnPart(at){
 function moveAlongEdge(part,edge,dt){
   const a = nodeById(edge.from); 
   const b = nodeById(edge.to);
+  if (!a || !b) {
+    // Remove part if its edge is invalid (node deleted)
+    parts = parts.filter(p => p !== part);
+    return;
+  }
   part.t += dt * (productionParams.transportSpeed / 100); 
   if(part.t>1) part.t=1;
   part.x = a.x + (b.x-a.x)*part.t;
@@ -322,7 +327,7 @@ function update(){
     }
     
     if(!m.current){ 
-      const pres = inEdges(m).map(e=>nodeById(e.from));
+      let pres = inEdges(m).map(e=>nodeById(e.from)).filter(Boolean); // filter out undefined
       let candidate = pres.find(n=>n.type===TYPE.BUFFER && n.queue.length>0);
       if(!candidate) candidate = pres.find(n=>n.type===TYPE.SOURCE && parts.some(p=>p.state==='waitingAtSource'&&p.nodeId===n.id));
       if(!candidate){ 
